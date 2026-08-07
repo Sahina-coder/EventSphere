@@ -1,1 +1,22 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0F1729;
+  --card: #1A2438;
+  --border: #2A3552;
+  --text: #E8EAF0;
+  --text-muted: #8B93A7;
+  --accent: #F5A623;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, .font-display {
+  font-family: 'Space Grotesk', sans-serif;
+}
