@@ -3,7 +3,7 @@ interface TabsProps {
   onChange: (tab: string) => void;
 }
 
-const tabs = ["Events", "Venues", "Resources", "Bookings"];
+const tabs = ["Events", "Venues", "Resources", "Bookings", "Allocations", "Report"];
 const Tabs = ({ active, onChange }: TabsProps) => {
   return (
     <div className="max-w-6xl mx-auto px-6 pt-6">

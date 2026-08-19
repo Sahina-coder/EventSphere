@@ -9,6 +9,9 @@ import ResourceForm from "./pages/Resources/ResourceForm";
 import ResourceList from "./pages/Resources/ResourceList";
 import BookingForm from "./pages/Bookings/BookingForm";
 import BookingList from "./pages/Bookings/BookingList";
+import AllocationForm from "./pages/Allocations/AllocationForm";
+import AllocationList from "./pages/Allocations/AllocationList";
+import Report from "./pages/Report/Report";
 
 function App() {
   const [activeTab, setActiveTab] = useState("Events");
@@ -43,6 +46,13 @@ function App() {
             <BookingList />
           </>
         )}
+        {activeTab === "Allocations" && (
+          <>
+            <AllocationForm />
+            <AllocationList />
+          </>
+        )}
+        {activeTab === "Report" && <Report />}
       </div>
     </div>
   );
