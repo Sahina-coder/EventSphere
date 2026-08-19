@@ -2,10 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { getEvents } from "../../services/eventService";
 
 const statusColor: Record<string, string> = {
-  Planned: "#F5A623",
-  Ongoing: "#3B9E6F",
-  Completed: "#5A6B8C",
-  Cancelled: "#C4534A",
+  Planned: "#4F46E5",
+  Ongoing: "#059669",
+  Completed: "#64748B",
+  Cancelled: "#DC2626",
 };
 
 const EventList = () => {
@@ -15,51 +15,41 @@ const EventList = () => {
   });
 
   return (
-    <div className="max-w-xl mx-auto px-6 pb-16">
-      <p className="text-xs tracking-widest uppercase text-[var(--text-muted)] mb-1">
-        {events ? `${events.length} total` : ""}
-      </p>
-      <h1 className="font-display text-3xl font-semibold mb-6">Events</h1>
+    <div className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-6">
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="font-display text-lg font-semibold">Events</h2>
+        <span className="text-xs font-medium text-[var(--text-muted)] bg-slate-100 px-2.5 py-1 rounded-full">
+          {events ? events.length : 0} total
+        </span>
+      </div>
 
-      {isLoading && (
-        <p className="text-[var(--text-muted)] text-sm">Loading events…</p>
-      )}
-
-      {error && (
-        <p className="text-sm text-red-400">
-          Couldn't reach the server. Is the backend running?
-        </p>
-      )}
-
+      {isLoading && <p className="text-sm text-[var(--text-muted)]">Loading events…</p>}
+      {error && <p className="text-sm text-red-500">Couldn't reach the server. Is the backend running?</p>}
       {events && events.length === 0 && (
-        <p className="text-sm text-[var(--text-muted)]">
-          No events yet — create one above to get started.
-        </p>
+        <p className="text-sm text-[var(--text-muted)]">No events yet — create one to get started.</p>
       )}
 
       <div className="space-y-3">
         {events?.map((event) => {
-          const color = statusColor[event.status] ?? "#5A6B8C";
+          const color = statusColor[event.status] ?? "#64748B";
           return (
             <div
               key={event.id}
-              className="bg-[var(--card)] border border-[var(--border)] rounded-lg pl-4 pr-5 py-4 flex items-start justify-between gap-4"
+              className="border border-slate-100 rounded-lg pl-4 pr-4 py-3.5 flex items-start justify-between gap-4 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200"
               style={{ borderLeft: `3px solid ${color}` }}
             >
               <div>
-                <h2 className="font-display text-base font-semibold">{event.name}</h2>
-                <p className="text-sm text-[var(--text-muted)] mt-0.5">
+                <h3 className="text-sm font-semibold text-slate-800">{event.name}</h3>
+                <p className="text-xs text-[var(--text-muted)] mt-0.5">
                   {event.event_type} · {new Date(event.date).toLocaleString()}
                 </p>
                 {event.budget != null && (
-                  <p className="text-sm text-[var(--text-muted)] mt-1">
-                    Budget ₹{event.budget.toLocaleString()}
-                  </p>
+                  <p className="text-xs text-[var(--text-muted)] mt-1">Budget ₹{event.budget.toLocaleString()}</p>
                 )}
               </div>
               <span
                 className="text-xs font-medium px-2.5 py-1 rounded-full whitespace-nowrap"
-                style={{ backgroundColor: `${color}22`, color }}
+                style={{ backgroundColor: `${color}18`, color }}
               >
                 {event.status}
               </span>
