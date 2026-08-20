@@ -13,6 +13,10 @@ import AllocationForm from "./pages/Allocations/AllocationForm";
 import AllocationList from "./pages/Allocations/AllocationList";
 import AttendeeForm from "./pages/Attendees/AttendeeForm";
 import AttendeeList from "./pages/Attendees/AttendeeList";
+import VendorForm from "./pages/Vendors/VendorForm";
+import VendorList from "./pages/Vendors/VendorList";
+import VendorAssignmentForm from "./pages/VendorAssignments/VendorAssignmentForm";
+import VendorAssignmentList from "./pages/VendorAssignments/VendorAssignmentList";
 import Report from "./pages/Report/Report";
 
 function App() {
@@ -24,42 +28,14 @@ function App() {
       <Tabs active={activeTab} onChange={setActiveTab} />
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-6 py-8">
-        {activeTab === "Events" && (
-          <>
-            <EventForm />
-            <EventList />
-          </>
-        )}
-        {activeTab === "Venues" && (
-          <>
-            <VenueForm />
-            <VenueList />
-          </>
-        )}
-        {activeTab === "Resources" && (
-          <>
-            <ResourceForm />
-            <ResourceList />
-          </>
-        )}
-        {activeTab === "Bookings" && (
-          <>
-            <BookingForm />
-            <BookingList />
-          </>
-        )}
-        {activeTab === "Allocations" && (
-          <>
-            <AllocationForm />
-            <AllocationList />
-          </>
-        )}
-        {activeTab === "Attendees" && (
-          <>
-            <AttendeeForm />
-            <AttendeeList />
-          </>
-        )}
+        {activeTab === "Events" && (<><EventForm /><EventList /></>)}
+        {activeTab === "Venues" && (<><VenueForm /><VenueList /></>)}
+        {activeTab === "Resources" && (<><ResourceForm /><ResourceList /></>)}
+        {activeTab === "Bookings" && (<><BookingForm /><BookingList /></>)}
+        {activeTab === "Allocations" && (<><AllocationForm /><AllocationList /></>)}
+        {activeTab === "Attendees" && (<><AttendeeForm /><AttendeeList /></>)}
+        {activeTab === "Vendors" && (<><VendorForm /><VendorList /></>)}
+        {activeTab === "Assignments" && (<><VendorAssignmentForm /><VendorAssignmentList /></>)}
         {activeTab === "Report" && <Report />}
       </div>
     </div>
