@@ -11,6 +11,8 @@ import BookingForm from "./pages/Bookings/BookingForm";
 import BookingList from "./pages/Bookings/BookingList";
 import AllocationForm from "./pages/Allocations/AllocationForm";
 import AllocationList from "./pages/Allocations/AllocationList";
+import AttendeeForm from "./pages/Attendees/AttendeeForm";
+import AttendeeList from "./pages/Attendees/AttendeeList";
 import Report from "./pages/Report/Report";
 
 function App() {
@@ -50,6 +52,12 @@ function App() {
           <>
             <AllocationForm />
             <AllocationList />
+          </>
+        )}
+        {activeTab === "Attendees" && (
+          <>
+            <AttendeeForm />
+            <AttendeeList />
           </>
         )}
         {activeTab === "Report" && <Report />}
