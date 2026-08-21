@@ -18,6 +18,7 @@ import VendorList from "./pages/Vendors/VendorList";
 import VendorAssignmentForm from "./pages/VendorAssignments/VendorAssignmentForm";
 import VendorAssignmentList from "./pages/VendorAssignments/VendorAssignmentList";
 import Report from "./pages/Report/Report";
+import Budget from "./pages/Budget/Budget";
 
 function App() {
   const [activeTab, setActiveTab] = useState("Events");
@@ -37,6 +38,7 @@ function App() {
         {activeTab === "Vendors" && (<><VendorForm /><VendorList /></>)}
         {activeTab === "Assignments" && (<><VendorAssignmentForm /><VendorAssignmentList /></>)}
         {activeTab === "Report" && <Report />}
+        {activeTab === "Budget" && <Budget />}
       </div>
     </div>
   );
