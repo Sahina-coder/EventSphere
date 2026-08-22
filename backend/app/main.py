@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, engine
-from app.routers import event, venue, resource, booking, allocation, attendee, ticket, vendor, vendor_assignment, expense, health_score, risk, feedback, certificate
+from app.routers import event, venue, resource, booking, allocation, attendee, ticket, vendor, vendor_assignment, expense, health_score, risk, feedback, certificate, recommendations
 
 Base.metadata.create_all(bind=engine)
 
@@ -29,6 +29,7 @@ app.include_router(health_score.router)
 app.include_router(risk.router)
 app.include_router(feedback.router)
 app.include_router(certificate.router)
+app.include_router(recommendations.router)
 
 @app.get("/")
 def root():

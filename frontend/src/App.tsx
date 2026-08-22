@@ -24,6 +24,7 @@ import HealthScore from "./pages/HealthScore/HealthScore";
 import Risks from "./pages/Risks/Risks";
 import Feedback from "./pages/Feedback/Feedback";
 import Certificates from "./pages/Certificates/Certificates";
+import VenueRecommendations from "./pages/Recommendations/VenueRecommendations";
 
 function App() {
   const [activeTab, setActiveTab] = useState("Events");
@@ -46,6 +47,7 @@ function App() {
         {activeTab === "Health Score" && <HealthScore />}
         {activeTab === "Risks" && <Risks />}
         {activeTab === "Analytics" && <Analytics />}
+        {activeTab === "Venue Match" && <VenueRecommendations />}
         {activeTab === "Certificates" && <Certificates />}
         {activeTab === "Report" && <Report />}
         {activeTab === "Feedback" && <Feedback />}
