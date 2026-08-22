@@ -20,6 +20,10 @@ import VendorAssignmentList from "./pages/VendorAssignments/VendorAssignmentList
 import Report from "./pages/Report/Report";
 import Budget from "./pages/Budget/Budget";
 import Analytics from "./pages/Analytics/Analytics";
+import HealthScore from "./pages/HealthScore/HealthScore";
+import Risks from "./pages/Risks/Risks";
+import Feedback from "./pages/Feedback/Feedback";
+import Certificates from "./pages/Certificates/Certificates";
 
 function App() {
   const [activeTab, setActiveTab] = useState("Events");
@@ -39,8 +43,12 @@ function App() {
         {activeTab === "Vendors" && (<><VendorForm /><VendorList /></>)}
         {activeTab === "Assignments" && (<><VendorAssignmentForm /><VendorAssignmentList /></>)}
         {activeTab === "Budget" && <Budget />}
+        {activeTab === "Health Score" && <HealthScore />}
+        {activeTab === "Risks" && <Risks />}
         {activeTab === "Analytics" && <Analytics />}
+        {activeTab === "Certificates" && <Certificates />}
         {activeTab === "Report" && <Report />}
+        {activeTab === "Feedback" && <Feedback />}
         
       </div>
     </div>

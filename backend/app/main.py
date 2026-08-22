@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, engine
-from app.routers import event, venue, resource, booking, allocation, attendee, ticket, vendor, vendor_assignment, expense
+from app.routers import event, venue, resource, booking, allocation, attendee, ticket, vendor, vendor_assignment, expense, health_score, risk, feedback, certificate
 
 Base.metadata.create_all(bind=engine)
 
@@ -25,6 +25,10 @@ app.include_router(ticket.router)
 app.include_router(vendor.router)
 app.include_router(vendor_assignment.router)
 app.include_router(expense.router)
+app.include_router(health_score.router)
+app.include_router(risk.router)
+app.include_router(feedback.router)
+app.include_router(certificate.router)
 
 @app.get("/")
 def root():
