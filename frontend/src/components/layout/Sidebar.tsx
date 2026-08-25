@@ -2,6 +2,10 @@ import {
   CalendarRange, MapPin, Package, Link2, Boxes, Users, Building2,
   ClipboardList, Wallet, BarChart3, HeartPulse, ShieldAlert,
   MessageSquareHeart, Award, Compass,
+  Bell,
+  PackageSearch,
+  FlaskConical,
+  AlertOctagon,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -25,6 +29,7 @@ const groups: NavGroup[] = [
     items: [
       { label: "Events", icon: CalendarRange },
       { label: "Venues", icon: MapPin },
+      { label: "Venue Map", icon: MapPin },
       { label: "Resources", icon: Package },
       { label: "Bookings", icon: Link2 },
       { label: "Allocations", icon: Boxes },
@@ -49,8 +54,10 @@ const groups: NavGroup[] = [
     items: [
       { label: "Analytics", icon: BarChart3 },
       { label: "Health Score", icon: HeartPulse },
+      { label: "Simulator" , icon: FlaskConical},
       { label: "Risks", icon: ShieldAlert },
       { label: "Venue Match", icon: Compass },
+      { label: "Incidents", icon: AlertOctagon }
     ],
   },
   {
@@ -58,7 +65,9 @@ const groups: NavGroup[] = [
     items: [
       { label: "Feedback", icon: MessageSquareHeart },
       { label: "Certificates", icon: Award },
+      { label: "Lost & Found", icon: PackageSearch },
       { label: "Report", icon: BarChart3 },
+      { label: "Notifications", icon: Bell },
     ],
   },
 ];
