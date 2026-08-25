@@ -1,8 +1,8 @@
-# EventSphere (ongoing project..)
+## EventSphere
 
-EventSphere is a full-stack event planning and resource management system built with **React, FastAPI, and PostgreSQL**.
+Intelligent Event Planning, Resource Management & Decision Support System
 
-The application provides a centralized platform for managing events, attendees, venues, resources, vendors, bookings, tickets, expenses, feedback, and other event-related operations.
+EventSphere is a full-stack web application that replaces manual event management methods (Excel sheets, WhatsApp, phone calls) with a centralized digital platform. It covers the complete event lifecycle - from planning and venue booking to attendee registration, vendor coordination, budgeting, and intelligent analytics.
 
 ## Tech Stack
 
