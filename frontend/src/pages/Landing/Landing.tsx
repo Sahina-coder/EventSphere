@@ -1,18 +1,16 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useQuery, useQueries } from "@tanstack/react-query";
 import {
   CalendarRange, ArrowRight, Users, Building2, Wallet, BarChart3,
-  ShieldAlert, Sparkles, ChevronDown, Star, LinkIcon,
+  ShieldAlert, Sparkles, ChevronDown, Star, Link2,
 } from "lucide-react";
+import { getEvents } from "../../services/eventService";
+import { getAttendees } from "../../services/attendeeService";
+import { getVendors } from "../../services/vendorService";
+import { getFeedbackSummary } from "../../services/feedbackService";
 
 const navLinks = ["Features", "How It Works", "Organizers", "Attendees", "Vendors", "About"];
-
-const stats = [
-  { value: "500+", label: "Events Managed" },
-  { value: "25K+", label: "Attendees" },
-  { value: "150+", label: "Organizers" },
-  { value: "94%", label: "Satisfaction" },
-];
 
 const features = [
   { icon: CalendarRange, title: "Event Management", desc: "Create, organize, monitor, and manage events from one centralized platform." },
@@ -31,9 +29,9 @@ const steps = [
 ];
 
 const roles = [
-  { title: "Organizer", desc: "Plan, manage, analyze, and optimize events.", cta: "Explore Organizer Platform" },
-  { title: "Attendee", desc: "Discover events, register, manage tickets, follow schedules, and provide feedback.", cta: "Explore Attendee Experience" },
-  { title: "Vendor", desc: "Discover opportunities, apply for events, manage bookings, payments, and reviews.", cta: "Explore Vendor Platform" },
+  { title: "Organizer", desc: "Plan, manage, analyze, and optimize events.", cta: "Explore Organizer Platform", to: "/dashboard" },
+  { title: "Attendee", desc: "Discover events, register, manage tickets, follow schedules, and provide feedback.", cta: "Explore Attendee Experience", to: "/attendee" },
+  { title: "Vendor", desc: "Discover opportunities, apply for events, manage bookings, payments, and reviews.", cta: "Explore Vendor Platform", to: "/vendor" },
 ];
 
 const testimonials = [
@@ -44,6 +42,10 @@ const testimonials = [
 
 const team = [
   { name: "Sahina", role: "Full-Stack Developer" },
+  { name: "Team Member 2", role: "Backend Developer" },
+  { name: "Team Member 3", role: "Frontend Developer" },
+  { name: "Team Member 4", role: "Product Design" },
+  { name: "Team Member 5", role: "QA & Testing" },
 ];
 
 const faqs = [
@@ -59,6 +61,30 @@ const faqs = [
 
 const Landing = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  const { data: events } = useQuery({ queryKey: ["events"], queryFn: getEvents });
+  const { data: attendees } = useQuery({ queryKey: ["attendees"], queryFn: getAttendees });
+  const { data: vendors } = useQuery({ queryKey: ["vendors"], queryFn: getVendors });
+
+    const satisfactionSamples = events?.slice(0, 3) ?? [];
+  const satisfactionQueries = useQueries({
+    queries: satisfactionSamples.map((e) => ({
+      queryKey: ["landingFeedback", e.id],
+      queryFn: () => getFeedbackSummary(e.id),
+      enabled: !!e.id,
+    })),
+  });
+  const ratedSummaries = satisfactionQueries.map((q) => q.data).filter((d) => d && d.total_submissions > 0);
+  const avgSatisfactionPct = ratedSummaries.length > 0
+    ? Math.round((ratedSummaries.reduce((s, d) => s + (d?.avg_overall ?? 0), 0) / ratedSummaries.length / 5) * 100)
+    : null;
+
+  const stats = [
+    { value: `${events?.length ?? 0}+`, label: "Events Managed" },
+    { value: `${attendees?.length ?? 0}+`, label: "Attendees" },
+    { value: `${vendors?.length ?? 0}+`, label: "Vendors Onboarded" },
+    { value: avgSatisfactionPct !== null ? `${avgSatisfactionPct}%` : "—", label: "Satisfaction" },
+  ];
 
   return (
     <div className="bg-[var(--bg)] text-[var(--text)]">
@@ -105,17 +131,17 @@ const Landing = () => {
             </a>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-[var(--border)] shadow-md p-6">
+        <Link to="/dashboard" className="block bg-white rounded-xl border border-[var(--border)] shadow-md p-6 hover:shadow-lg transition">
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div className="bg-indigo-50 rounded-lg p-4">
               <BarChart3 size={18} className="text-[var(--accent)] mb-2" />
-              <p className="text-xl font-semibold">1,240</p>
+              <p className="text-xl font-semibold">{attendees?.length ?? 0}</p>
               <p className="text-xs text-[var(--text-muted)]">Registrations</p>
             </div>
             <div className="bg-emerald-50 rounded-lg p-4">
               <Users size={18} className="text-emerald-600 mb-2" />
-              <p className="text-xl font-semibold">87%</p>
-              <p className="text-xs text-[var(--text-muted)]">Attendance Rate</p>
+              <p className="text-xl font-semibold">{events?.length ?? 0}</p>
+              <p className="text-xs text-[var(--text-muted)]">Events Managed</p>
             </div>
           </div>
           <div className="h-24 bg-slate-50 rounded-lg flex items-end gap-1.5 p-3">
@@ -123,7 +149,7 @@ const Landing = () => {
               <div key={i} className="flex-1 bg-[var(--accent)] rounded-t" style={{ height: `${h}%`, opacity: 0.7 + i * 0.04 }} />
             ))}
           </div>
-        </div>
+        </Link>
       </section>
 
       {/* Stats */}
@@ -136,7 +162,6 @@ const Landing = () => {
             </div>
           ))}
         </div>
-        <p className="text-center text-xs text-slate-400 mt-4">Demo statistics for illustration</p>
       </section>
 
       {/* Features */}
@@ -175,9 +200,9 @@ const Landing = () => {
               <p className="text-xs font-medium text-slate-500 mb-1">Recommended Action</p>
               <p className="text-sm text-slate-700">Send reminder notifications 24 hours before the event.</p>
             </div>
-            <button className="text-sm font-medium text-[var(--accent)] flex items-center gap-1">
+            <Link to="/dashboard" className="text-sm font-medium text-[var(--accent)] flex items-center gap-1">
               Take Action <ArrowRight size={14} />
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -205,9 +230,9 @@ const Landing = () => {
               <div key={r.title} id={r.title.toLowerCase() + "s"} className="rounded-xl border border-[var(--border)] p-6 hover:shadow-md transition-all duration-200">
                 <h3 className="font-display text-lg font-semibold mb-2">{r.title}</h3>
                 <p className="text-sm text-[var(--text-muted)] mb-5">{r.desc}</p>
-                <button className="text-sm font-medium text-[var(--accent)] flex items-center gap-1">
+                <Link to={r.to} className="text-sm font-medium text-[var(--accent)] flex items-center gap-1">
                   {r.cta} <ArrowRight size={14} />
-                </button>
+                </Link>
               </div>
             ))}
           </div>
@@ -220,16 +245,16 @@ const Landing = () => {
         <p className="text-[var(--text-muted)] max-w-xl mx-auto mb-10">
           KPI cards, real-time analytics, risk indicators, and recommendations — all in one place.
         </p>
-        <div className="bg-white rounded-xl border border-[var(--border)] shadow-lg p-3 max-w-4xl mx-auto">
+        <Link to="/dashboard" className="block bg-white rounded-xl border border-[var(--border)] shadow-lg p-3 max-w-4xl mx-auto hover:shadow-xl transition">
           <div className="flex gap-1.5 px-2 py-2">
             <span className="w-2.5 h-2.5 rounded-full bg-red-300" />
             <span className="w-2.5 h-2.5 rounded-full bg-amber-300" />
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-300" />
           </div>
           <div className="bg-slate-50 rounded-lg h-64 flex items-center justify-center text-slate-300 text-sm">
-            Dashboard preview
+            Dashboard preview — click to open
           </div>
-        </div>
+        </Link>
         <Link to="/dashboard" className="inline-flex items-center gap-2 mt-8 bg-[var(--accent)] text-white font-medium px-5 py-3 rounded-lg hover:brightness-110 transition">
           Explore Dashboard <ArrowRight size={16} />
         </Link>
@@ -276,7 +301,7 @@ const Landing = () => {
               <p className="text-sm font-medium text-slate-800">{m.name}</p>
               <p className="text-xs text-[var(--text-muted)] mb-2">{m.role}</p>
               <div className="flex justify-center gap-2 text-slate-400">
-                <LinkIcon size={14} />
+                <Link2 size={14} />
               </div>
             </div>
           ))}
@@ -332,13 +357,18 @@ const Landing = () => {
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-3">Platform</p>
             <ul className="space-y-2 text-sm">
-              <li>Features</li><li>Organizers</li><li>Attendees</li><li>Vendors</li>
+              <li><a href="#features" className="hover:text-white transition">Features</a></li>
+              <li><Link to="/dashboard" className="hover:text-white transition">Organizers</Link></li>
+              <li><Link to="/attendee" className="hover:text-white transition">Attendees</Link></li>
+              <li><Link to="/vendor" className="hover:text-white transition">Vendors</Link></li>
             </ul>
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-3">Company</p>
             <ul className="space-y-2 text-sm">
-              <li>About</li><li>Team</li><li>Contact</li>
+              <li><a href="#about" className="hover:text-white transition">About</a></li>
+              <li><a href="#about" className="hover:text-white transition">Team</a></li>
+              <li>Contact</li>
             </ul>
           </div>
           <div>
