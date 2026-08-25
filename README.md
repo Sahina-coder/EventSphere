@@ -1,10 +1,10 @@
-## EventSphere
+## EventSphere (ongoing..)
 
 Intelligent Event Planning, Resource Management & Decision Support System
 
 EventSphere is a full-stack web application that replaces manual event management methods (Excel sheets, WhatsApp, phone calls) with a centralized digital platform. It covers the complete event lifecycle - from planning and venue booking to attendee registration, vendor coordination, budgeting, and intelligent analytics.
 
-## Tech Stack
+## Tech Stack (will be updated later..)
 
 ### Frontend
 
@@ -35,21 +35,29 @@ EventSphere is a full-stack web application that replaces manual event managemen
 EventSphere/
 ├── backend/
 │   ├── app/
-│   │   ├── models/
-│   │   ├── routers/
-│   │   ├── schemas/
+│   │   ├── main.py
 │   │   ├── database.py
-│   │   └── main.py
-│   └── requirements.txt
+│   │   ├── models/          # SQLAlchemy models
+│   │   ├── schemas/         # Pydantic schemas
+│   │   └── routers/         # API route handlers
+│   ├── requirements.txt
+│   └── .env
 │
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   ├── package.json
-│   ├── vite.config.ts
-│   └── tsconfig.json
-│
-└── README.md
+└── frontend/
+    ├── src/
+    │   ├── pages/            # Feature pages (Events, Venues, Budget, etc.)
+    │   ├── pages/Landing/     # Public landing page
+    │   ├── pages/Auth/        # Login / Signup / Forgot Password
+    │   ├── pages/Dashboard/   # Organizer dashboard shell
+    │   ├── pages/AttendeePortal/
+    │   ├── pages/VendorPortal/
+    │   ├── components/layout/ # Sidebar, headers
+    │   ├── context/           # Attendee/Vendor "viewing as" context
+    │   ├── services/          # API call functions per module
+    │   ├── types/             # TypeScript interfaces
+    │   ├── App.tsx            # Router
+    │   └── index.css          # Design tokens
+    └── index.html
 ```
 
 ## Features
