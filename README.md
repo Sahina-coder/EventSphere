@@ -368,12 +368,6 @@ npm run preview   # Preview production build
 
 🚧 **Live Demo — Coming Soon**
 
-Once deployed, this section can become:
-
-```text
-🚀 Live Demo: https://your-eventsphere-domain.com
-📚 API Docs: https://your-api-domain.com/docs
-```
 
 > **Note:** `localhost` URLs are for local development only and are not publicly accessible.
 
