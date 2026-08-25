@@ -24,6 +24,11 @@ import Feedback from "../Feedback/Feedback";
 import Certificates from "../Certificates/Certificates";
 import VenueRecommendations from "../Recommendations/VenueRecommendations";
 import Report from "../Report/Report";
+import Notifications from "../Notifications/Notifications";
+import VenueMap from "../VenueMap/VenueMap";
+import LostFound from "../LostFound/LostFound";
+import Simulator from "../Simulator/Simulator";
+import Incidents from "../Incidents/Incidents";
 
 const pageTitles: Record<string, string> = {
   Events: "Events",
@@ -59,6 +64,7 @@ const DashboardApp = () => {
         <div className="max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6 px-8 py-8">
           {activeTab === "Events" && (<><EventForm /><EventList /></>)}
           {activeTab === "Venues" && (<><VenueForm /><VenueList /></>)}
+          {activeTab === "Venue Map" && <VenueMap />}
           {activeTab === "Resources" && (<><ResourceForm /><ResourceList /></>)}
           {activeTab === "Bookings" && (<><BookingForm /><BookingList /></>)}
           {activeTab === "Allocations" && (<><AllocationForm /><AllocationList /></>)}
@@ -67,12 +73,16 @@ const DashboardApp = () => {
           {activeTab === "Assignments" && (<><VendorAssignmentForm /><VendorAssignmentList /></>)}
           {activeTab === "Budget" && <Budget />}
           {activeTab === "Analytics" && <Analytics />}
+          {activeTab === "Simulator" && <Simulator />}
           {activeTab === "Health Score" && <HealthScore />}
+          {activeTab === "Incidents" && <Incidents />}
           {activeTab === "Risks" && <Risks />}
           {activeTab === "Venue Match" && <VenueRecommendations />}
           {activeTab === "Feedback" && <Feedback />}
           {activeTab === "Certificates" && <Certificates />}
+          {activeTab === "Lost & Found" && <LostFound />}
           {activeTab === "Report" && <Report />}
+          {activeTab === "Notifications" && <Notifications />}
         </div>
       </div>
     </div>
