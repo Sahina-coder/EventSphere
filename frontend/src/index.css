@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #F8FAFC;
-  --card: #FFFFFF;
-  --border: #E2E8F0;
-  --text: #0F172A;
-  --text-muted: #64748B;
-  --accent: #4F46E5;
+  --bg: #0a0b10;
+  --card: #14161f;
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #f1f2f6;
+  --text-muted: #9498ab;
+  --accent: #818cf8;
 }
 
 body {
@@ -28,9 +28,103 @@ h1, h2, h3, .font-display {
   height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: #CBD5E1;
+  background-color: rgba(255, 255, 255, 0.15);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
+}
+
+/* Global dark reskin for existing component classes */
+.bg-white {
+  background-color: var(--card) !important;
+}
+
+.bg-\[var\(--bg\)\] {
+  background-color: var(--bg) !important;
+}
+
+.bg-slate-50,
+.bg-slate-100 {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.text-slate-800,
+.text-slate-900 {
+  color: var(--text) !important;
+}
+
+.text-slate-600,
+.text-slate-700 {
+  color: var(--text-muted) !important;
+}
+
+.text-slate-400,
+.text-slate-500 {
+  color: rgba(148, 152, 171, 0.7) !important;
+}
+
+.border-slate-100,
+.border-slate-200 {
+  border-color: var(--border) !important;
+}
+
+.border-\[var\(--border\)\] {
+  border-color: var(--border) !important;
+}
+
+.text-\[var\(--text-muted\)\] {
+  color: var(--text-muted) !important;
+}
+
+.text-\[var\(--text\)\] {
+  color: var(--text) !important;
+}
+
+.bg-indigo-50 {
+  background-color: rgba(129, 140, 248, 0.12) !important;
+}
+
+.bg-emerald-50 {
+  background-color: rgba(52, 211, 153, 0.1) !important;
+}
+
+.bg-amber-50 {
+  background-color: rgba(251, 191, 36, 0.1) !important;
+}
+
+.bg-red-50 {
+  background-color: rgba(248, 113, 113, 0.1) !important;
+}
+
+.border-amber-200 {
+  border-color: rgba(251, 191, 36, 0.3) !important;
+}
+
+.border-red-200 {
+  border-color: rgba(248, 113, 113, 0.3) !important;
+}
+
+.border-emerald-200 {
+  border-color: rgba(52, 211, 153, 0.3) !important;
+}
+
+input,
+select,
+textarea {
+  background-color: var(--card) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(148, 152, 171, 0.5) !important;
+}
+
+/* Keep the landing page's own dark design untouched (it manages its own colors) */
+.landing-dark input,
+.landing-dark select,
+.landing-dark textarea {
+  background-color: transparent !important;
 }
