@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { CalendarCheck, MapPin, Package, Link2, TrendingUp } from "lucide-react";
 import { getEvents } from "../../services/eventService";
 import { getVenues } from "../../services/venueService";
 import { getResources } from "../../services/resourceService";
 import { getBookings } from "../../services/bookingService";
+import AnimatedCounter from "../../components/AnimatedCounter";
 
 const Report = () => {
   const { data: events } = useQuery({ queryKey: ["events"], queryFn: getEvents });
@@ -33,22 +35,33 @@ const Report = () => {
   return (
     <div className="col-span-1 md:col-span-2 space-y-6">
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-        {cards.map((c) => (
-          <div
+        {cards.map((c, i) => (
+          <motion.div
             key={c.label}
-            className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: i * 0.06 }}
+            whileHover={{ y: -3 }}
+            className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-5 hover:shadow-md transition-shadow duration-200"
           >
             <div className="w-9 h-9 rounded-lg bg-indigo-50 text-[var(--accent)] flex items-center justify-center">
               <c.icon size={18} />
             </div>
-            <p className="text-2xl font-semibold text-slate-900 mt-3">{c.value}</p>
+            <p className="text-2xl font-semibold text-slate-900 mt-3">
+              <AnimatedCounter value={c.value} />
+            </p>
             <p className="text-xs text-[var(--text-muted)] mt-0.5">{c.label}</p>
-          </div>
+          </motion.div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-6">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.3 }}
+          className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-6"
+        >
           <h2 className="font-display text-lg font-semibold mb-4">Event Status Breakdown</h2>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
@@ -64,24 +77,31 @@ const Report = () => {
               <span className="font-medium text-slate-800">₹{totalBudget.toLocaleString()}</span>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-6">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.36 }}
+          className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-6"
+        >
           <h2 className="font-display text-lg font-semibold mb-4">Resource Utilization</h2>
           <div className="flex justify-between text-sm mb-2">
             <span className="text-[var(--text-muted)]">In use</span>
             <span className="font-medium text-slate-800">{resourceUsagePct}%</span>
           </div>
           <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-[var(--accent)] transition-all duration-300"
-              style={{ width: `${resourceUsagePct}%` }}
+            <motion.div
+              className="h-full bg-[var(--accent)]"
+              initial={{ width: 0 }}
+              animate={{ width: `${resourceUsagePct}%` }}
+              transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
             />
           </div>
           <p className="text-xs text-[var(--text-muted)] mt-3">
             {availableResourceQty} of {totalResourceQty} total units currently available
           </p>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
