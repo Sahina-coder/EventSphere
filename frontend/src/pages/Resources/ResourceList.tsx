@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { getResources } from "../../services/resourceService";
 
 const ResourceList = () => {
@@ -16,40 +17,65 @@ const ResourceList = () => {
         </span>
       </div>
 
-      {isLoading && <p className="text-sm text-[var(--text-muted)]">Loading resources…</p>}
+      {isLoading && (
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-16 rounded-lg bg-slate-50 animate-pulse" />
+          ))}
+        </div>
+      )}
       {error && <p className="text-sm text-red-500">Couldn't reach the server. Is the backend running?</p>}
       {resources && resources.length === 0 && (
-        <p className="text-sm text-[var(--text-muted)]">No resources yet — add one to get started.</p>
+        <div className="text-center py-8">
+          <p className="text-3xl mb-2">📦</p>
+          <p className="text-sm font-medium text-slate-700">No resources yet</p>
+          <p className="text-xs text-[var(--text-muted)] mt-1">Add one to get started.</p>
+        </div>
       )}
 
       <div className="space-y-3">
-        {resources?.map((resource) => {
+        {resources?.map((resource, i) => {
           const pct = resource.quantity_total > 0
             ? (resource.quantity_available / resource.quantity_total) * 100
             : 0;
-          const barColor = pct === 0 ? "bg-red-500" : pct <= 20 ? "bg-amber-500" : "bg-emerald-500";
+          const barColor = pct === 0 ? "#DC2626" : pct <= 20 ? "#D97706" : "#059669";
+          const statusLabel = pct === 0 ? "Out of Stock" : pct <= 20 ? "Low Stock" : "Available";
 
           return (
-            <div
+            <motion.div
               key={resource.id}
-              className="border border-slate-100 rounded-lg px-4 py-3.5 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: i * 0.04 }}
+              whileHover={{ y: -2 }}
+              className="border border-slate-100 rounded-lg px-4 py-3.5 hover:shadow-sm transition-shadow duration-200"
             >
               <div className="flex items-start justify-between gap-4 mb-2">
                 <div>
                   <h3 className="text-sm font-semibold text-slate-800">{resource.name}</h3>
                   <p className="text-xs text-[var(--text-muted)] mt-0.5">{resource.category}</p>
                 </div>
-                <span className="text-xs font-medium text-slate-600 whitespace-nowrap">
-                  {resource.quantity_available} / {resource.quantity_total}
+                <span
+                  className="text-xs font-medium px-2.5 py-1 rounded-full whitespace-nowrap"
+                  style={{ backgroundColor: `${barColor}18`, color: barColor }}
+                >
+                  {statusLabel}
                 </span>
               </div>
+              <div className="flex items-center justify-between text-xs text-[var(--text-muted)] mb-1.5">
+                <span>{resource.quantity_available} / {resource.quantity_total} available</span>
+                <span>{Math.round(pct)}%</span>
+              </div>
               <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                <div
-                  className={`h-full ${barColor} transition-all duration-300`}
-                  style={{ width: `${pct}%` }}
+                <motion.div
+                  className="h-full"
+                  style={{ backgroundColor: barColor }}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${pct}%` }}
+                  transition={{ duration: 0.6, delay: i * 0.04 + 0.1, ease: "easeOut" }}
                 />
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
