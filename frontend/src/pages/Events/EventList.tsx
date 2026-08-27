@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { getEvents } from "../../services/eventService";
 
 const statusColor: Record<string, string> = {
@@ -23,19 +24,33 @@ const EventList = () => {
         </span>
       </div>
 
-      {isLoading && <p className="text-sm text-[var(--text-muted)]">Loading events…</p>}
+      {isLoading && (
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-16 rounded-lg bg-slate-50 animate-pulse" />
+          ))}
+        </div>
+      )}
       {error && <p className="text-sm text-red-500">Couldn't reach the server. Is the backend running?</p>}
       {events && events.length === 0 && (
-        <p className="text-sm text-[var(--text-muted)]">No events yet — create one to get started.</p>
+        <div className="text-center py-8">
+          <p className="text-3xl mb-2">📅</p>
+          <p className="text-sm font-medium text-slate-700">No events yet</p>
+          <p className="text-xs text-[var(--text-muted)] mt-1">Create your first event to get started.</p>
+        </div>
       )}
 
       <div className="space-y-3">
-        {events?.map((event) => {
+        {events?.map((event, i) => {
           const color = statusColor[event.status] ?? "#64748B";
           return (
-            <div
+            <motion.div
               key={event.id}
-              className="border border-slate-100 rounded-lg pl-4 pr-4 py-3.5 flex items-start justify-between gap-4 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: i * 0.04 }}
+              whileHover={{ y: -2 }}
+              className="border border-slate-100 rounded-lg pl-4 pr-4 py-3.5 flex items-start justify-between gap-4 hover:shadow-sm transition-shadow duration-200"
               style={{ borderLeft: `3px solid ${color}` }}
             >
               <div>
@@ -53,7 +68,7 @@ const EventList = () => {
               >
                 {event.status}
               </span>
-            </div>
+            </motion.div>
           );
         })}
       </div>
