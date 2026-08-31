@@ -13,6 +13,8 @@ import { getFeedbackSummary } from "../../services/feedbackService";
 import Reveal from "../../components/Reveal";
 import AnimatedCounter from "../../components/AnimatedCounter";
 import GradientButton from "../../components/GradientButton";
+import Hero3D from "../../components/Hero3D";
+import TiltCard from "../../components/TiltCard";
 import "./Landing.css";
 
 const navLinks = ["Features", "How It Works", "Organizers", "Attendees", "Vendors", "About"];
@@ -116,8 +118,11 @@ const Landing = () => {
         </div>
       </header>
 
-      {/* Hero */}
+      {/* Hero with 3D scene */}
       <section className="relative">
+        <div className="absolute inset-0 z-0">
+          <Hero3D />
+        </div>
         <div className="ld-glow-blob ld-blob-1" />
         <div className="ld-glow-blob ld-blob-2" />
         <div className="relative z-10 max-w-6xl mx-auto px-6 pt-24 pb-20 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -149,42 +154,37 @@ const Landing = () => {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.92, rotateY: -8 }}
-            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            style={{ perspective: 1000 }}
           >
-            <Link to="/dashboard" className="ld-card ld-shimmer block rounded-2xl p-6">
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <motion.div
-                  whileHover={{ scale: 1.03 }}
-                  className="bg-indigo-500/10 border border-indigo-400/20 rounded-xl p-4"
-                >
-                  <BarChart3 size={18} className="text-indigo-300 mb-2" />
-                  <p className="text-xl font-semibold text-white">{attendees?.length ?? 0}</p>
-                  <p className="text-xs ld-muted">Registrations</p>
-                </motion.div>
-                <motion.div
-                  whileHover={{ scale: 1.03 }}
-                  className="bg-purple-500/10 border border-purple-400/20 rounded-xl p-4"
-                >
-                  <Users size={18} className="text-purple-300 mb-2" />
-                  <p className="text-xl font-semibold text-white">{events?.length ?? 0}</p>
-                  <p className="text-xs ld-muted">Events Managed</p>
-                </motion.div>
-              </div>
-              <div className="h-24 bg-white/5 rounded-xl flex items-end gap-1.5 p-3">
-                {[40, 65, 45, 80, 60, 90, 70].map((h, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ height: 0 }}
-                    animate={{ height: `${h}%` }}
-                    transition={{ duration: 0.6, delay: 0.5 + i * 0.06, ease: "easeOut" }}
-                    className="flex-1 bg-gradient-to-t from-indigo-500 to-purple-400 rounded-t"
-                  />
-                ))}
-              </div>
-            </Link>
+            <TiltCard className="ld-card ld-shimmer rounded-2xl p-6 cursor-pointer">
+              <Link to="/dashboard" style={{ transform: "translateZ(30px)" }} className="block">
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <motion.div whileHover={{ scale: 1.03 }} className="bg-indigo-500/10 border border-indigo-400/20 rounded-xl p-4">
+                    <BarChart3 size={18} className="text-indigo-300 mb-2" />
+                    <p className="text-xl font-semibold text-white">{attendees?.length ?? 0}</p>
+                    <p className="text-xs ld-muted">Registrations</p>
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.03 }} className="bg-purple-500/10 border border-purple-400/20 rounded-xl p-4">
+                    <Users size={18} className="text-purple-300 mb-2" />
+                    <p className="text-xl font-semibold text-white">{events?.length ?? 0}</p>
+                    <p className="text-xs ld-muted">Events Managed</p>
+                  </motion.div>
+                </div>
+                <div className="h-24 bg-white/5 rounded-xl flex items-end gap-1.5 p-3">
+                  {[40, 65, 45, 80, 60, 90, 70].map((h, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ height: 0 }}
+                      animate={{ height: `${h}%` }}
+                      transition={{ duration: 0.6, delay: 0.5 + i * 0.06, ease: "easeOut" }}
+                      className="flex-1 bg-gradient-to-t from-indigo-500 to-purple-400 rounded-t"
+                    />
+                  ))}
+                </div>
+              </Link>
+            </TiltCard>
           </motion.div>
         </div>
       </section>
@@ -211,13 +211,15 @@ const Landing = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {features.map((f, i) => (
             <Reveal key={f.title} delay={i * 0.06}>
-              <div className="ld-card rounded-xl p-6">
-                <div className="w-10 h-10 rounded-lg bg-indigo-500/15 text-indigo-300 flex items-center justify-center mb-4">
-                  <f.icon size={20} />
+              <TiltCard className="ld-card rounded-xl p-6">
+                <div style={{ transform: "translateZ(20px)" }}>
+                  <div className="w-10 h-10 rounded-lg bg-indigo-500/15 text-indigo-300 flex items-center justify-center mb-4">
+                    <f.icon size={20} />
+                  </div>
+                  <h3 className="font-display text-base font-semibold mb-1.5 text-white">{f.title}</h3>
+                  <p className="text-sm ld-muted">{f.desc}</p>
                 </div>
-                <h3 className="font-display text-base font-semibold mb-1.5 text-white">{f.title}</h3>
-                <p className="text-sm ld-muted">{f.desc}</p>
-              </div>
+              </TiltCard>
             </Reveal>
           ))}
         </div>
@@ -235,21 +237,23 @@ const Landing = () => {
             </div>
           </Reveal>
           <Reveal delay={0.15}>
-            <div className="ld-card rounded-xl p-6">
-              <div className="flex items-center gap-2 text-amber-400 text-sm font-semibold mb-2">
-                <ShieldAlert size={16} /> Attendance Risk Detected
+            <TiltCard className="ld-card rounded-xl p-6">
+              <div style={{ transform: "translateZ(20px)" }}>
+                <div className="flex items-center gap-2 text-amber-400 text-sm font-semibold mb-2">
+                  <ShieldAlert size={16} /> Attendance Risk Detected
+                </div>
+                <p className="text-sm ld-muted mb-4">
+                  Registration patterns indicate a potential increase in attendee no-shows.
+                </p>
+                <div className="bg-white/5 rounded-lg p-3 mb-4">
+                  <p className="text-xs font-medium text-white/60 mb-1">Recommended Action</p>
+                  <p className="text-sm text-white/90">Send reminder notifications 24 hours before the event.</p>
+                </div>
+                <Link to="/dashboard" className="text-sm font-medium text-indigo-300 flex items-center gap-1 hover:text-indigo-200 transition">
+                  Take Action <ArrowRight size={14} />
+                </Link>
               </div>
-              <p className="text-sm ld-muted mb-4">
-                Registration patterns indicate a potential increase in attendee no-shows.
-              </p>
-              <div className="bg-white/5 rounded-lg p-3 mb-4">
-                <p className="text-xs font-medium text-white/60 mb-1">Recommended Action</p>
-                <p className="text-sm text-white/90">Send reminder notifications 24 hours before the event.</p>
-              </div>
-              <Link to="/dashboard" className="text-sm font-medium text-indigo-300 flex items-center gap-1 hover:text-indigo-200 transition">
-                Take Action <ArrowRight size={14} />
-              </Link>
-            </div>
+            </TiltCard>
           </Reveal>
         </div>
       </section>
@@ -277,13 +281,15 @@ const Landing = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {roles.map((r, i) => (
               <Reveal key={r.title} delay={i * 0.08}>
-                <div id={r.title.toLowerCase() + "s"} className="ld-card rounded-xl p-6">
-                  <h3 className="font-display text-lg font-semibold mb-2 text-white">{r.title}</h3>
-                  <p className="text-sm ld-muted mb-5">{r.desc}</p>
-                  <Link to={r.to} className="text-sm font-medium text-indigo-300 flex items-center gap-1 hover:text-indigo-200 transition">
-                    {r.cta} <ArrowRight size={14} />
-                  </Link>
-                </div>
+                <TiltCard className="ld-card rounded-xl p-6">
+                  <div id={r.title.toLowerCase() + "s"} style={{ transform: "translateZ(20px)" }}>
+                    <h3 className="font-display text-lg font-semibold mb-2 text-white">{r.title}</h3>
+                    <p className="text-sm ld-muted mb-5">{r.desc}</p>
+                    <Link to={r.to} className="text-sm font-medium text-indigo-300 flex items-center gap-1 hover:text-indigo-200 transition">
+                      {r.cta} <ArrowRight size={14} />
+                    </Link>
+                  </div>
+                </TiltCard>
               </Reveal>
             ))}
           </div>
@@ -299,16 +305,20 @@ const Landing = () => {
           </p>
         </Reveal>
         <Reveal delay={0.1}>
-          <Link to="/dashboard" className="ld-card ld-shimmer block rounded-2xl p-3 max-w-4xl mx-auto">
-            <div className="flex gap-1.5 px-2 py-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-red-400/70" />
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-400/70" />
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400/70" />
-            </div>
-            <div className="bg-white/5 rounded-xl h-64 flex items-center justify-center text-white/30 text-sm">
-              Dashboard preview — click to open
-            </div>
-          </Link>
+          <div className="max-w-4xl mx-auto">
+            <TiltCard className="ld-card ld-shimmer rounded-2xl p-3 cursor-pointer">
+              <Link to="/dashboard" style={{ transform: "translateZ(25px)" }} className="block">
+                <div className="flex gap-1.5 px-2 py-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-400/70" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400/70" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400/70" />
+                </div>
+                <div className="bg-white/5 rounded-xl h-64 flex items-center justify-center text-white/30 text-sm">
+                  Dashboard preview — click to open
+                </div>
+              </Link>
+            </TiltCard>
+          </div>
           <div className="mt-8 inline-block">
             <GradientButton to="/dashboard" label="Explore Dashboard" />
           </div>
@@ -325,23 +335,25 @@ const Landing = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
               <Reveal key={t.name} delay={i * 0.08}>
-                <div className="ld-card rounded-xl p-6">
-                  <div className="flex gap-0.5 mb-3">
-                    {Array.from({ length: 5 }).map((_, j) => (
-                      <Star key={j} size={14} fill={j < t.rating ? "#facc15" : "none"} color={j < t.rating ? "#facc15" : "rgba(255,255,255,0.2)"} />
-                    ))}
-                  </div>
-                  <p className="text-sm ld-muted mb-4">"{t.review}"</p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-sm font-semibold text-white">
-                      {t.name[0]}
+                <TiltCard className="ld-card rounded-xl p-6">
+                  <div style={{ transform: "translateZ(15px)" }}>
+                    <div className="flex gap-0.5 mb-3">
+                      {Array.from({ length: 5 }).map((_, j) => (
+                        <Star key={j} size={14} fill={j < t.rating ? "#facc15" : "none"} color={j < t.rating ? "#facc15" : "rgba(255,255,255,0.2)"} />
+                      ))}
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-white">{t.name}</p>
-                      <p className="text-xs ld-muted">{t.role}, {t.org}</p>
+                    <p className="text-sm ld-muted mb-4">"{t.review}"</p>
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-sm font-semibold text-white">
+                        {t.name[0]}
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-white">{t.name}</p>
+                        <p className="text-xs ld-muted">{t.role}, {t.org}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </TiltCard>
               </Reveal>
             ))}
           </div>

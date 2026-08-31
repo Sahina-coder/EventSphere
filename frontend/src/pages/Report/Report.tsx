@@ -6,6 +6,7 @@ import { getVenues } from "../../services/venueService";
 import { getResources } from "../../services/resourceService";
 import { getBookings } from "../../services/bookingService";
 import AnimatedCounter from "../../components/AnimatedCounter";
+import TiltCard from "../../components/TiltCard";
 
 const Report = () => {
   const { data: events } = useQuery({ queryKey: ["events"], queryFn: getEvents });
@@ -41,16 +42,18 @@ const Report = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: i * 0.06 }}
-            whileHover={{ y: -3 }}
-            className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-5 hover:shadow-md transition-shadow duration-200"
           >
-            <div className="w-9 h-9 rounded-lg bg-indigo-50 text-[var(--accent)] flex items-center justify-center">
-              <c.icon size={18} />
-            </div>
-            <p className="text-2xl font-semibold text-slate-900 mt-3">
-              <AnimatedCounter value={c.value} />
-            </p>
-            <p className="text-xs text-[var(--text-muted)] mt-0.5">{c.label}</p>
+            <TiltCard className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-5">
+              <div style={{ transform: "translateZ(15px)" }}>
+                <div className="w-9 h-9 rounded-lg bg-indigo-50 text-[var(--accent)] flex items-center justify-center">
+                  <c.icon size={18} />
+                </div>
+                <p className="text-2xl font-semibold text-slate-900 mt-3">
+                  <AnimatedCounter value={c.value} />
+                </p>
+                <p className="text-xs text-[var(--text-muted)] mt-0.5">{c.label}</p>
+              </div>
+            </TiltCard>
           </motion.div>
         ))}
       </div>
