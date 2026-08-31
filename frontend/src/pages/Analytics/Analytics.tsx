@@ -10,6 +10,7 @@ import { getVendorAssignments } from "../../services/vendorAssignmentService";
 import { getExpenses } from "../../services/expenseService";
 import { getBookings } from "../../services/bookingService";
 import AnimatedCounter from "../../components/AnimatedCounter";
+import TiltCard from "../../components/TiltCard";
 
 const COLORS = ["#4F46E5", "#059669", "#D97706", "#DC2626", "#64748B", "#0EA5E9"];
 
@@ -20,13 +21,15 @@ const StatCard = ({ label, value, delay }: { label: string; value: number | stri
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay }}
-      whileHover={{ y: -3 }}
-      className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-5 hover:shadow-md transition-shadow duration-200"
     >
-      <p className="text-2xl font-semibold text-slate-900">
-        {isNumeric ? <AnimatedCounter value={value as number} /> : value}
-      </p>
-      <p className="text-xs text-[var(--text-muted)] mt-0.5">{label}</p>
+      <TiltCard className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-5">
+        <div style={{ transform: "translateZ(15px)" }}>
+          <p className="text-2xl font-semibold text-slate-900">
+            {isNumeric ? <AnimatedCounter value={value as number} /> : value}
+          </p>
+          <p className="text-xs text-[var(--text-muted)] mt-0.5">{label}</p>
+        </div>
+      </TiltCard>
     </motion.div>
   );
 };
