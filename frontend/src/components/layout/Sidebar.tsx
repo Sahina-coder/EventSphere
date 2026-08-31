@@ -5,7 +5,8 @@ import {
   Bell,
   PackageSearch,
   FlaskConical,
-  AlertOctagon,
+  AlertOctagon,Handshake,
+  ClipboardCheck,TrendingUp,FileText,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -33,6 +34,7 @@ const groups: NavGroup[] = [
       { label: "Resources", icon: Package },
       { label: "Bookings", icon: Link2 },
       { label: "Allocations", icon: Boxes },
+      { label: "Approvals", icon: ClipboardCheck }
     ],
   },
   {
@@ -47,12 +49,14 @@ const groups: NavGroup[] = [
     title: "Finance",
     items: [
       { label: "Budget", icon: Wallet },
+      { label: "Sponsorship", icon: Handshake }
     ],
   },
   {
     title: "Intelligence",
     items: [
       { label: "Analytics", icon: BarChart3 },
+      { label: "Forecast", icon: TrendingUp },
       { label: "Health Score", icon: HeartPulse },
       { label: "Simulator" , icon: FlaskConical},
       { label: "Risks", icon: ShieldAlert },
@@ -67,6 +71,7 @@ const groups: NavGroup[] = [
       { label: "Certificates", icon: Award },
       { label: "Lost & Found", icon: PackageSearch },
       { label: "Report", icon: BarChart3 },
+      { label: "Export", icon: FileText },
       { label: "Notifications", icon: Bell },
     ],
   },

@@ -29,6 +29,11 @@ import VenueMap from "../VenueMap/VenueMap";
 import LostFound from "../LostFound/LostFound";
 import Simulator from "../Simulator/Simulator";
 import Incidents from "../Incidents/Incidents";
+import Sponsorship from "../Sponsorship/Sponsorship";
+import Approvals from "../Approvals/Approvals";
+import Forecast from "../Forecast/Forecast";
+import ReportExport from "../ReportExport/ReportExport";
+
 
 const pageTitles: Record<string, string> = {
   Events: "Events",
@@ -72,6 +77,7 @@ const DashboardApp = () => {
           {activeTab === "Vendors" && (<><VendorForm /><VendorList /></>)}
           {activeTab === "Assignments" && (<><VendorAssignmentForm /><VendorAssignmentList /></>)}
           {activeTab === "Budget" && <Budget />}
+          {activeTab === "Sponsorship" && <Sponsorship />}
           {activeTab === "Analytics" && <Analytics />}
           {activeTab === "Simulator" && <Simulator />}
           {activeTab === "Health Score" && <HealthScore />}
@@ -80,8 +86,11 @@ const DashboardApp = () => {
           {activeTab === "Venue Match" && <VenueRecommendations />}
           {activeTab === "Feedback" && <Feedback />}
           {activeTab === "Certificates" && <Certificates />}
+          {activeTab === "Approvals" && <Approvals />}
+          {activeTab === "Forecast" && <Forecast />}
           {activeTab === "Lost & Found" && <LostFound />}
           {activeTab === "Report" && <Report />}
+          {activeTab === "Report Export" && <ReportExport />}
           {activeTab === "Notifications" && <Notifications />}
         </div>
       </div>
