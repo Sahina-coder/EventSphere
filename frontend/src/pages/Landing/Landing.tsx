@@ -210,7 +210,7 @@ const Landing = () => {
         <Reveal><h2 className="font-display text-3xl font-bold text-center mb-12 text-white">Everything You Need to Run Smarter Events</h2></Reveal>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {features.map((f, i) => (
-            <Reveal key={f.title} delay={i * 0.06}>
+            <Reveal key={f.title} delay={i * 0.06} direction={i % 2 === 0 ? "left" : "right"}>
               <TiltCard className="ld-card rounded-xl p-6">
                 <div style={{ transform: "translateZ(20px)" }}>
                   <div className="w-10 h-10 rounded-lg bg-indigo-500/15 text-indigo-300 flex items-center justify-center mb-4">
@@ -228,7 +228,7 @@ const Landing = () => {
       {/* Intelligence Section */}
       <section className="ld-section-bg py-20 relative z-10">
         <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <Reveal>
+          <Reveal direction="left">
             <div>
               <h2 className="font-display text-3xl font-bold mb-4 text-white">Don't Just Manage Your Events. Understand Them.</h2>
               <p className="ld-muted leading-relaxed">
@@ -236,7 +236,7 @@ const Landing = () => {
               </p>
             </div>
           </Reveal>
-          <Reveal delay={0.15}>
+          <Reveal delay={0.15} direction="right">
             <TiltCard className="ld-card rounded-xl p-6">
               <div style={{ transform: "translateZ(20px)" }}>
                 <div className="flex items-center gap-2 text-amber-400 text-sm font-semibold mb-2">
@@ -280,7 +280,7 @@ const Landing = () => {
           <Reveal><h2 className="font-display text-3xl font-bold text-center mb-12 text-white">One Platform. Three Experiences.</h2></Reveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {roles.map((r, i) => (
-              <Reveal key={r.title} delay={i * 0.08}>
+              <Reveal key={r.title} delay={i * 0.08} direction={i === 0 ? "left" : i === 2 ? "right" : "up"}>
                 <TiltCard className="ld-card rounded-xl p-6">
                   <div id={r.title.toLowerCase() + "s"} style={{ transform: "translateZ(20px)" }}>
                     <h3 className="font-display text-lg font-semibold mb-2 text-white">{r.title}</h3>
@@ -334,7 +334,7 @@ const Landing = () => {
           </Reveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
-              <Reveal key={t.name} delay={i * 0.08}>
+              <Reveal key={t.name} delay={i * 0.08} direction={i === 0 ? "left" : i === 2 ? "right" : "up"}>
                 <TiltCard className="ld-card rounded-xl p-6">
                   <div style={{ transform: "translateZ(15px)" }}>
                     <div className="flex gap-0.5 mb-3">
