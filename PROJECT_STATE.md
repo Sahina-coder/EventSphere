@@ -1,4 +1,4 @@
-# EventSphere — Project State
+# EventSphere - Project State
 
 > **Last updated:** Current development build
 
