@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #0a0b10;
-  --card: #14161f;
+  --bg: #0a0f0e;
+  --card: #121917;
   --border: rgba(255, 255, 255, 0.08);
-  --text: #f1f2f6;
-  --text-muted: #9498ab;
-  --accent: #818cf8;
+  --text: #f1f5f4;
+  --text-muted: #94a8a4;
+  --accent: #2dd4bf;
 }
 
 body {
@@ -61,7 +61,7 @@ h1, h2, h3, .font-display {
 
 .text-slate-400,
 .text-slate-500 {
-  color: rgba(148, 152, 171, 0.7) !important;
+  color: rgba(148, 168, 164, 0.7) !important;
 }
 
 .border-slate-100,
@@ -82,7 +82,7 @@ h1, h2, h3, .font-display {
 }
 
 .bg-indigo-50 {
-  background-color: rgba(129, 140, 248, 0.12) !important;
+  background-color: rgba(45, 212, 191, 0.12) !important;
 }
 
 .bg-emerald-50 {
@@ -109,6 +109,14 @@ h1, h2, h3, .font-display {
   border-color: rgba(52, 211, 153, 0.3) !important;
 }
 
+.text-\[var\(--accent\)\] {
+  color: var(--accent) !important;
+}
+
+.bg-\[var\(--accent\)\] {
+  background-color: var(--accent) !important;
+}
+
 input,
 select,
 textarea {
@@ -119,7 +127,7 @@ textarea {
 
 input::placeholder,
 textarea::placeholder {
-  color: rgba(148, 152, 171, 0.5) !important;
+  color: rgba(148, 168, 164, 0.5) !important;
 }
 
 /* Keep the landing page's own dark design untouched (it manages its own colors) */

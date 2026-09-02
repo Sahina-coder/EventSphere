@@ -1,14 +1,14 @@
 .btn-wrapper {
   --rad: 32px;
   --color-wrapper-border: #fff;
-  --color-btn-bg: #4f46e5;
-  --color-btn-text: #f0e7e7;
-  --color-btn-text-shadow: #be8686;
-  --color-btn-inset-shadow: #3730a3;
+  --color-btn-bg: #14b8a6;
+  --color-btn-text: #000;
+  --color-btn-text-shadow: #fff;
+  --color-btn-inset-shadow: #0f766e;
   --color-layer-a: #fff;
-  --color-layer-b: #6366f1;
+  --color-layer-b: #34d399;
   --color-overlay-text: #000;
-  --color-overlay-glow: #d13b3b;
+  --color-overlay-glow: #fff;
   --color-overlay-shadow: #0004;
   --color-overlay-highlight: #fff5;
   position: relative;
@@ -104,7 +104,7 @@
   transform: scale(1.1);
 }
 .btn-wrapper:hover .gradient-btn {
-  color: #fffafa00;
+  color: #0000;
   text-shadow: 0 0 0 #0000;
 }
 .btn-wrapper:active .text-overlay {

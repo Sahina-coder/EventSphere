@@ -17,8 +17,6 @@ import Hero3D from "../../components/Hero3D";
 import TiltCard from "../../components/TiltCard";
 import "./Landing.css";
 
-const navLinks = ["Features", "How It Works", "Organizers", "Attendees", "Vendors", "About"];
-
 const features = [
   { icon: CalendarRange, title: "Event Management", desc: "Create, organize, monitor, and manage events from one centralized platform." },
   { icon: Users, title: "Attendee Management", desc: "Manage registrations, attendance, participant information, and engagement." },
@@ -95,31 +93,9 @@ const Landing = () => {
 
   return (
     <div className="landing-dark min-h-screen">
-      {/* Navbar */}
-      <header className="ld-nav sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white">
-              <CalendarRange size={16} />
-            </div>
-            <span className="font-logo text-xl font-bold text-white">EventSphere</span>
-          </div>
-          <nav className="hidden md:flex items-center gap-7">
-            {navLinks.map((link) => (
-              <a key={link} href={`#${link.toLowerCase().replace(/\s+/g, "-")}`} className="text-sm ld-muted hover:text-white transition">
-                {link}
-              </a>
-            ))}
-          </nav>
-          <div className="flex items-center gap-3">
-            <Link to="/login" className="text-sm font-medium text-white/80 hover:text-white transition">Log In</Link>
-            <GradientButton to="/signup" label="Get Started" />
-          </div>
-        </div>
-      </header>
-
+      
       {/* Hero with 3D scene */}
-      <section className="relative">
+      <section className="relative pt-20">
         <div className="absolute inset-0 z-0">
           <Hero3D />
         </div>

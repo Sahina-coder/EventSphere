@@ -24,17 +24,17 @@ const Hero3D = () => {
     scene.add(group);
 
     const icoGeo = new THREE.IcosahedronGeometry(1.6, 0);
-    const icoMat = new THREE.MeshBasicMaterial({ color: 0x818cf8, wireframe: true, transparent: true, opacity: 0.55 });
+    const icoMat = new THREE.MeshBasicMaterial({ color: 0x2dd4bf, wireframe: true, transparent: true, opacity: 0.55 });
     const ico = new THREE.Mesh(icoGeo, icoMat);
     group.add(ico);
 
     const torusGeo = new THREE.TorusGeometry(2.4, 0.02, 16, 100);
-    const torusMat = new THREE.MeshBasicMaterial({ color: 0xa78bfa, transparent: true, opacity: 0.4 });
+    const torusMat = new THREE.MeshBasicMaterial({ color: 0x34d399, transparent: true, opacity: 0.4 });
     const torus = new THREE.Mesh(torusGeo, torusMat);
     torus.rotation.x = Math.PI / 2.3;
     group.add(torus);
 
-    const torus2 = new THREE.Mesh(torusGeo.clone(), new THREE.MeshBasicMaterial({ color: 0x6366f1, transparent: true, opacity: 0.3 }));
+    const torus2 = new THREE.Mesh(torusGeo.clone(), new THREE.MeshBasicMaterial({ color: 0x14b8a6, transparent: true, opacity: 0.3 }));
     torus2.rotation.x = Math.PI / 1.6;
     torus2.rotation.y = Math.PI / 4;
     group.add(torus2);
@@ -48,7 +48,7 @@ const Hero3D = () => {
       positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
     }
     particlesGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    const particlesMat = new THREE.PointsMaterial({ color: 0xc7d2fe, size: 0.03, transparent: true, opacity: 0.6 });
+    const particlesMat = new THREE.PointsMaterial({ color: 0x99f6e4, size: 0.03, transparent: true, opacity: 0.6 });
     const particles = new THREE.Points(particlesGeo, particlesMat);
     scene.add(particles);
 
