@@ -18,12 +18,16 @@ import Payments from "./pages/VendorPortal/Payments";
 import Reviews from "./pages/VendorPortal/Reviews";
 import { AttendeeProvider } from "./context/AttendeeContext";
 import { VendorProvider } from "./context/VendorContext";
+import GlobalNav from "./components/GlobalNav";
+import GlobalCursorGlow from "./components/GlobalCursorGlow";
 
 function App() {
   return (
     <BrowserRouter>
       <AttendeeProvider>
         <VendorProvider>
+          <GlobalNav />
+          <GlobalCursorGlow />
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
