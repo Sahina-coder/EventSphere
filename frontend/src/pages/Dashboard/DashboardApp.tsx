@@ -1,5 +1,7 @@
 import { useState } from "react";
 import Sidebar from "../../components/layout/Sidebar";
+import TopHeader from "../../components/layout/TopHeader";
+import Overview from "../Overview/Overview";
 import EventForm from "../Events/EventForm";
 import EventList from "../Events/EventList";
 import VenueForm from "../Venues/VenueForm";
@@ -34,64 +36,90 @@ import Approvals from "../Approvals/Approvals";
 import Forecast from "../Forecast/Forecast";
 import ReportExport from "../ReportExport/ReportExport";
 
-
-const pageTitles: Record<string, string> = {
-  Events: "Events",
-  Venues: "Venues",
-  Resources: "Resources",
-  Bookings: "Bookings",
-  Allocations: "Allocations",
-  Attendees: "Attendees",
-  Vendors: "Vendors",
-  Assignments: "Vendor Assignments",
-  Budget: "Budget & Expenses",
-  Analytics: "Analytics Dashboard",
-  "Health Score": "Event Health Score",
-  Risks: "Risk Detection",
-  "Venue Match": "Smart Venue Recommendation",
-  Feedback: "Feedback & Evaluation",
-  Certificates: "Certificates",
-  Report: "Summary Report",
+const pageMeta: Record<string, { title: string; subtitle?: string }> = {
+  Overview: { title: "Overview", subtitle: "Here's what's happening with your events today." },
+  Events: { title: "Events" },
+  Venues: { title: "Venues" },
+  "Venue Map": { title: "Venue Map" },
+  Resources: { title: "Resources" },
+  Bookings: { title: "Bookings" },
+  Allocations: { title: "Allocations" },
+  Approvals: { title: "Approvals" },
+  Attendees: { title: "Attendees" },
+  Vendors: { title: "Vendors" },
+  Assignments: { title: "Vendor Assignments" },
+  Budget: { title: "Budget & Expenses" },
+  Sponsorship: { title: "Sponsorship" },
+  Analytics: { title: "Analytics Dashboard" },
+  "Health Score": { title: "Event Health Score" },
+  Risks: { title: "Risk Detection" },
+  "Venue Match": { title: "Smart Venue Recommendation" },
+  Simulator: { title: "What-If Simulator" },
+  Forecast: { title: "Forecasting" },
+  Feedback: { title: "Feedback & Evaluation" },
+  Certificates: { title: "Certificates" },
+  Report: { title: "Summary Report" },
+  Export: { title: "Reports & Export" },
+  Notifications: { title: "Notifications" },
+  "Lost & Found": { title: "Lost & Found" },
+  Incidents: { title: "Incident Management" },
 };
 
 const DashboardApp = () => {
-  const [activeTab, setActiveTab] = useState("Events");
+  const [activeTab, setActiveTab] = useState("Overview");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const meta = pageMeta[activeTab] ?? { title: activeTab };
 
   return (
     <div className="min-h-screen bg-[var(--bg)] flex">
-      <Sidebar active={activeTab} onChange={setActiveTab} />
+      <Sidebar
+        active={activeTab}
+        onChange={setActiveTab}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
 
       <div className="flex-1 min-w-0">
-        <header className="bg-white border-b border-[var(--border)] px-8 py-4 sticky top-0 z-10">
-          <h2 className="font-display text-lg font-semibold">{pageTitles[activeTab] ?? activeTab}</h2>
-        </header>
+        <TopHeader
+          title={meta.title}
+          subtitle={meta.subtitle}
+          onMenuClick={() => setSidebarOpen(true)}
+          onNotificationsClick={() => setActiveTab("Notifications")}
+        />
 
-        <div className="max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6 px-8 py-8">
-          {activeTab === "Events" && (<><EventForm /><EventList /></>)}
-          {activeTab === "Venues" && (<><VenueForm /><VenueList /></>)}
-          {activeTab === "Venue Map" && <VenueMap />}
-          {activeTab === "Resources" && (<><ResourceForm /><ResourceList /></>)}
-          {activeTab === "Bookings" && (<><BookingForm /><BookingList /></>)}
-          {activeTab === "Allocations" && (<><AllocationForm /><AllocationList /></>)}
-          {activeTab === "Attendees" && (<><AttendeeForm /><AttendeeList /></>)}
-          {activeTab === "Vendors" && (<><VendorForm /><VendorList /></>)}
-          {activeTab === "Assignments" && (<><VendorAssignmentForm /><VendorAssignmentList /></>)}
-          {activeTab === "Budget" && <Budget />}
-          {activeTab === "Sponsorship" && <Sponsorship />}
-          {activeTab === "Analytics" && <Analytics />}
-          {activeTab === "Simulator" && <Simulator />}
-          {activeTab === "Health Score" && <HealthScore />}
-          {activeTab === "Incidents" && <Incidents />}
-          {activeTab === "Risks" && <Risks />}
-          {activeTab === "Venue Match" && <VenueRecommendations />}
-          {activeTab === "Feedback" && <Feedback />}
-          {activeTab === "Certificates" && <Certificates />}
-          {activeTab === "Approvals" && <Approvals />}
-          {activeTab === "Forecast" && <Forecast />}
-          {activeTab === "Lost & Found" && <LostFound />}
-          {activeTab === "Report" && <Report />}
-          {activeTab === "Report Export" && <ReportExport />}
-          {activeTab === "Notifications" && <Notifications />}
+        <div className="px-5 md:px-8 py-6">
+          {activeTab === "Overview" && <Overview onNavigate={setActiveTab} />}
+
+          {activeTab !== "Overview" && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl">
+              {activeTab === "Events" && (<><EventForm /><EventList /></>)}
+              {activeTab === "Venues" && (<><VenueForm /><VenueList /></>)}
+              {activeTab === "Resources" && (<><ResourceForm /><ResourceList /></>)}
+              {activeTab === "Bookings" && (<><BookingForm /><BookingList /></>)}
+              {activeTab === "Allocations" && (<><AllocationForm /><AllocationList /></>)}
+              {activeTab === "Attendees" && (<><AttendeeForm /><AttendeeList /></>)}
+              {activeTab === "Vendors" && (<><VendorForm /><VendorList /></>)}
+              {activeTab === "Assignments" && (<><VendorAssignmentForm /><VendorAssignmentList /></>)}
+              {activeTab === "Budget" && <Budget />}
+              {activeTab === "Sponsorship" && <Sponsorship />}
+              {activeTab === "Approvals" && <Approvals />}
+              {activeTab === "Analytics" && <Analytics />}
+              {activeTab === "Health Score" && <HealthScore />}
+              {activeTab === "Risks" && <Risks />}
+              {activeTab === "Venue Match" && <VenueRecommendations />}
+              {activeTab === "Simulator" && <Simulator />}
+              {activeTab === "Forecast" && <Forecast />}
+              {activeTab === "Feedback" && <Feedback />}
+              {activeTab === "Certificates" && <Certificates />}
+              {activeTab === "Report" && <Report />}
+              {activeTab === "Export" && <ReportExport />}
+              {activeTab === "Notifications" && <Notifications />}
+              {activeTab === "Venue Map" && <VenueMap />}
+              {activeTab === "Lost & Found" && <LostFound />}
+              {activeTab === "Incidents" && <Incidents />}
+            </div>
+          )}
         </div>
       </div>
     </div>
