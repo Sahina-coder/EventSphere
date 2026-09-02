@@ -4,8 +4,16 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #05060a;
+  background: #05070a0a;
+  background-color: #05100e;
   padding: 20px;
+}
+
+.auth-brand-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  margin-bottom: 20px;
 }
 
 .auth-wrapper {
@@ -13,13 +21,13 @@
   width: 100%;
   max-width: 820px;
   height: 540px;
-  border: 1px solid rgba(129, 140, 248, 0.35);
-  box-shadow: 0 0 60px -10px rgba(99, 102, 241, 0.35), 0 20px 60px -20px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(45, 212, 191, 0.35);
+  box-shadow: 0 0 60px -10px rgba(20, 184, 166, 0.35), 0 20px 60px -20px rgba(0, 0, 0, 0.6);
   overflow: hidden;
   border-radius: 20px;
   font-family: 'Inter', sans-serif;
   color: #fff;
-  background: #0b0e17;
+  background: #0b1615;
 }
 
 .auth-wrapper * {
@@ -135,7 +143,7 @@
 
 .field-wrapper input:focus,
 .field-wrapper input:not(:placeholder-shown) {
-  border-bottom: 1.5px solid #818cf8;
+  border-bottom: 1.5px solid #2dd4bf;
 }
 
 .field-wrapper label {
@@ -156,7 +164,7 @@
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.02em;
-  color: #a5b4fc;
+  color: #5eead4;
 }
 
 .field-wrapper i,
@@ -171,14 +179,14 @@
 
 .field-wrapper input:focus ~ svg,
 .field-wrapper input:not(:placeholder-shown) ~ svg {
-  color: #a5b4fc;
+  color: #5eead4;
 }
 
 .submit-button {
   position: relative;
   width: 100%;
   height: 44px;
-  background: #818cf8;
+  background: #14b8a6;
   border-radius: 10px;
   cursor: pointer;
   font-size: 14px;
@@ -188,7 +196,7 @@
   border: none;
   overflow: hidden;
   z-index: 1;
-  color: #0b0e17;
+  color: #0b1615;
   transition: filter 0.25s ease, transform 0.15s ease;
 }
 
@@ -210,7 +218,7 @@
 
 .switch-link a {
   text-decoration: none;
-  color: #a5b4fc;
+  color: #5eead4;
   font-weight: 600;
   cursor: pointer;
 }
@@ -299,7 +307,7 @@
   top: -5px;
   height: 640px;
   width: 850px;
-  background: linear-gradient(135deg, #0b0e17 0%, #4f46e5 55%, #818cf8 100%);
+  background: linear-gradient(135deg, #0b1615 0%, #0d9488 55%, #2dd4bf 100%);
   opacity: 0.9;
   transform: rotate(10deg) skewY(40deg);
   transform-origin: bottom right;
@@ -318,8 +326,8 @@
   top: 100%;
   height: 700px;
   width: 850px;
-  background: #0b0e17;
-  border-top: 1.5px solid rgba(129, 140, 248, 0.4);
+  background: #0b1615;
+  border-top: 1.5px solid rgba(45, 212, 191, 0.4);
   transform: rotate(0deg) skewY(0deg);
   transform-origin: bottom left;
   transition: 1.5s ease;
@@ -339,14 +347,14 @@
 }
 
 .auth-footer a {
-  color: #a5b4fc;
+  color: #5eead4;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease;
 }
 
 .auth-footer a:hover {
-  color: #c7d2fe;
+  color: #99f6e4;
 }
 
 @media (max-width: 768px) {

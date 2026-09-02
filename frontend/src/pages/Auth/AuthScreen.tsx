@@ -20,9 +20,10 @@ const AuthScreen = ({ initialMode }: AuthScreenProps) => {
     alert("Signup functionality coming soon.");
   };
 
-  return (
-    <div className="auth-page-bg">
-      <div className={`auth-wrapper ${toggled ? "toggled" : ""}`}>
+    return (
+      <div className="auth-page-bg">
+        <img src="/eventsphere-logo.svg" alt="EventSphere" className="auth-brand-logo" />
+        <div className={`auth-wrapper ${toggled ? "toggled" : ""}`}>
         <div className="background-shape" />
         <div className="secondary-shape" />
 
