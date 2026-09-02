@@ -1,0 +1,87 @@
+<svg
+  width="100"
+  height="100"
+  viewBox="0 0 100 100"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+  <linearGradient
+    id="eventSphereGradient"
+    x1="10"
+    y1="10"
+    x2="90"
+    y2="90"
+    gradientUnits="userSpaceOnUse"
+  >
+    <stop offset="0" stop-color="#0F172A"/>
+    <stop offset="0.5" stop-color="#1E3A8A"/>
+    <stop offset="1" stop-color="#2563EB"/>
+  </linearGradient>
+
+  <linearGradient
+    id="orbitGradient"
+    x1="20"
+    y1="80"
+    x2="82"
+    y2="20"
+    gradientUnits="userSpaceOnUse"
+  >
+    <stop offset="0" stop-color="#93C5FD"/>
+    <stop offset="1" stop-color="#FFFFFF"/>
+  </linearGradient>
+</defs>
+
+  <!-- Brand Background -->
+  <rect
+    width="100"
+    height="100"
+    rx="26"
+    fill="url(#eventSphereGradient)"
+  />
+
+  <!-- Abstract E -->
+  <path
+    d="M67 27H40C32.82 27 27 32.82 27 40V60C27 67.18 32.82 73 40 73H67"
+    stroke="#FFFFFF"
+    stroke-width="7"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Middle bar of E -->
+  <path
+    d="M29 50H61"
+    stroke="#FFFFFF"
+    stroke-width="7"
+    stroke-linecap="round"
+  />
+
+  <!-- Orbital Sphere -->
+  <ellipse
+    cx="51"
+    cy="50"
+    rx="31"
+    ry="15"
+    transform="rotate(-32 51 50)"
+    stroke="url(#orbitGradient)"
+    stroke-width="3.5"
+    opacity="0.9"
+  />
+
+  <!-- Orbit Node -->
+  <circle
+    cx="77"
+    cy="31"
+    r="6"
+    fill="#FFFFFF"
+  />
+
+  <!-- Small Connection Node -->
+  <circle
+    cx="25"
+    cy="69"
+    r="3.5"
+    fill="#C4B5FD"
+  />
+</svg>
