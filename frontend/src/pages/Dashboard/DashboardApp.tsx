@@ -12,12 +12,9 @@ import BookingForm from "../Bookings/BookingForm";
 import BookingList from "../Bookings/BookingList";
 import AllocationForm from "../Allocations/AllocationForm";
 import AllocationList from "../Allocations/AllocationList";
-import AttendeeForm from "../Attendees/AttendeeForm";
-import AttendeeList from "../Attendees/AttendeeList";
-import VendorForm from "../Vendors/VendorForm";
-import VendorList from "../Vendors/VendorList";
-import VendorAssignmentForm from "../VendorAssignments/VendorAssignmentForm";
-import VendorAssignmentList from "../VendorAssignments/VendorAssignmentList";
+import AttendeesPage from "../Attendees/AttendeesPage";
+import VendorsPage from "../Vendors/VendorsPage";
+import AssignmentsPage from "../VendorAssignments/AssignmentsPage";
 import Budget from "../Budget/Budget";
 import Analytics from "../Analytics/Analytics";
 import HealthScore from "../HealthScore/HealthScore";
@@ -98,9 +95,9 @@ const DashboardApp = () => {
               {activeTab === "Resources" && (<><ResourceForm /><ResourceList /></>)}
               {activeTab === "Bookings" && (<><BookingForm /><BookingList /></>)}
               {activeTab === "Allocations" && (<><AllocationForm /><AllocationList /></>)}
-              {activeTab === "Attendees" && (<><AttendeeForm /><AttendeeList /></>)}
-              {activeTab === "Vendors" && (<><VendorForm /><VendorList /></>)}
-              {activeTab === "Assignments" && (<><VendorAssignmentForm /><VendorAssignmentList /></>)}
+              {activeTab === "Attendees" && <AttendeesPage onNavigate={setActiveTab} />}
+              {activeTab === "Vendors" && <VendorsPage />}
+              {activeTab === "Assignments" && <AssignmentsPage />}
               {activeTab === "Budget" && <Budget />}
               {activeTab === "Sponsorship" && <Sponsorship />}
               {activeTab === "Approvals" && <Approvals />}
