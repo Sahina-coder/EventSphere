@@ -1,9 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-import { CalendarRange, Ticket, Sparkles } from "lucide-react";
+import { CalendarRange, Ticket, Sparkles, Compass } from "lucide-react";
 import { getEvents } from "../../services/eventService";
 import { getAttendees } from "../../services/attendeeService";
 import { getTickets } from "../../services/ticketService";
 import { useAttendeeContext } from "../../context/AttendeeContext";
+
+const StatModule = ({
+  label, value, icon: Icon, badgeColor,
+}: { label: string; value: string; icon: React.ComponentType<{ size?: number }>; badgeColor: string }) => (
+  <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 flex items-start justify-between">
+    <div>
+      <p className="text-xs text-[var(--text-muted)] mb-2">{label}</p>
+      <p className="text-2xl font-bold text-[var(--text)]">{value}</p>
+    </div>
+    <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: badgeColor }}>
+      <Icon size={16} />
+    </div>
+  </div>
+);
 
 const AttendeeDashboardHome = () => {
   const { attendeeId } = useAttendeeContext();
@@ -21,7 +35,7 @@ const AttendeeDashboardHome = () => {
 
   if (!attendeeId) {
     return (
-      <div className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-8 text-center">
+      <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-8 text-center">
         <p className="text-sm text-[var(--text-muted)]">Select an attendee from the sidebar to view your dashboard.</p>
       </div>
     );
@@ -30,58 +44,50 @@ const AttendeeDashboardHome = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold">Welcome back, {me?.name} 👋</h1>
+        <h1 className="font-display text-2xl font-bold text-[var(--text)]">Welcome back, {me?.name} 👋</h1>
         <p className="text-sm text-[var(--text-muted)] mt-1">Here's what's happening with your events.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-5">
-          <CalendarRange size={18} className="text-[var(--accent)] mb-2" />
-          <p className="text-2xl font-semibold">{upcoming.length}</p>
-          <p className="text-xs text-[var(--text-muted)]">Upcoming Events</p>
-        </div>
-        <div className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-5">
-          <Ticket size={18} className="text-emerald-600 mb-2" />
-          <p className="text-2xl font-semibold">{myTickets.length}</p>
-          <p className="text-xs text-[var(--text-muted)]">My Tickets</p>
-        </div>
-        <div className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-5">
-          <Sparkles size={18} className="text-amber-500 mb-2" />
-          <p className="text-2xl font-semibold">{recommended.length}</p>
-          <p className="text-xs text-[var(--text-muted)]">Recommended for You</p>
-        </div>
+        <StatModule label="Upcoming Events" value={String(upcoming.length)} icon={CalendarRange} badgeColor="rgba(45,212,191,0.15)" />
+        <StatModule label="My Tickets" value={String(myTickets.length)} icon={Ticket} badgeColor="rgba(52,211,153,0.15)" />
+        <StatModule label="Recommended" value={String(recommended.length)} icon={Sparkles} badgeColor="rgba(245,158,11,0.15)" />
       </div>
 
-      <div className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-6">
-        <h2 className="font-display text-base font-semibold mb-4">Upcoming Events</h2>
+      <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6">
+        <h2 className="font-display text-base font-semibold text-[var(--text)] mb-4">Upcoming Events</h2>
         {upcoming.length === 0 ? (
           <p className="text-sm text-[var(--text-muted)]">No upcoming events registered.</p>
         ) : (
-          <div className="space-y-3">
+          <div className="divide-y divide-[var(--border)]">
             {upcoming.map((e) => (
-              <div key={e.id} className="border border-slate-100 rounded-lg px-4 py-3" style={{ borderLeft: "3px solid #4F46E5" }}>
-                <p className="text-sm font-semibold text-slate-800">{e.name}</p>
-                <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                  {e.event_type} · {new Date(e.date).toLocaleString()}
-                </p>
+              <div key={e.id} className="py-3 first:pt-0 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-[var(--accent)]/15 text-[var(--accent)] flex items-center justify-center shrink-0">
+                  <CalendarRange size={14} />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-[var(--text)] truncate">{e.name}</p>
+                  <p className="text-xs text-[var(--text-muted)]">{e.event_type} · {new Date(e.date).toLocaleString()}</p>
+                </div>
               </div>
             ))}
           </div>
         )}
       </div>
 
-      <div className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-6">
-        <h2 className="font-display text-base font-semibold mb-4">Recommended Events</h2>
+      <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Compass size={16} className="text-[var(--accent)]" />
+          <h2 className="font-display text-base font-semibold text-[var(--text)]">Recommended Events</h2>
+        </div>
         {recommended.length === 0 ? (
           <p className="text-sm text-[var(--text-muted)]">No new recommendations right now.</p>
         ) : (
-          <div className="space-y-3">
+          <div className="divide-y divide-[var(--border)]">
             {recommended.map((e) => (
-              <div key={e.id} className="border border-slate-100 rounded-lg px-4 py-3">
-                <p className="text-sm font-semibold text-slate-800">{e.name}</p>
-                <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                  {e.event_type} · {new Date(e.date).toLocaleDateString()}
-                </p>
+              <div key={e.id} className="py-3 first:pt-0">
+                <p className="text-sm font-medium text-[var(--text)]">{e.name}</p>
+                <p className="text-xs text-[var(--text-muted)] mt-0.5">{e.event_type} · {new Date(e.date).toLocaleDateString()}</p>
               </div>
             ))}
           </div>

@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { CalendarDays } from "lucide-react";
 import { getEvents } from "../../services/eventService";
 import { getAttendees } from "../../services/attendeeService";
 import { useAttendeeContext } from "../../context/AttendeeContext";
@@ -16,7 +17,9 @@ const Schedule = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold">Schedule</h1>
+        <h1 className="font-display text-2xl font-bold text-[var(--text)] flex items-center gap-2">
+          Schedule <CalendarDays size={20} className="text-[var(--text-muted)]" />
+        </h1>
         <p className="text-sm text-[var(--text-muted)] mt-1">Timeline of your registered events.</p>
       </div>
 
@@ -25,15 +28,15 @@ const Schedule = () => {
       ) : myEvents.length === 0 ? (
         <p className="text-sm text-[var(--text-muted)]">No events on your schedule yet.</p>
       ) : (
-        <div className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-6">
+        <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6">
           <div className="space-y-5">
             {myEvents.map((e) => (
               <div key={e.id} className="flex gap-4">
                 <div className="w-20 shrink-0 text-xs text-[var(--text-muted)] pt-0.5">
                   {new Date(e.date).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
                 </div>
-                <div className="flex-1 border-l-2 border-indigo-100 pl-4 pb-1">
-                  <p className="text-sm font-semibold text-slate-800">{e.name}</p>
+                <div className="flex-1 border-l-2 border-[var(--accent)]/30 pl-4 pb-1">
+                  <p className="text-sm font-semibold text-[var(--text)]">{e.name}</p>
                   <p className="text-xs text-[var(--text-muted)] mt-0.5">
                     {e.event_type} · {new Date(e.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                   </p>

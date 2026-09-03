@@ -17,7 +17,9 @@ const MyTickets = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold">My Tickets</h1>
+        <h1 className="font-display text-2xl font-bold text-[var(--text)] flex items-center gap-2">
+          My Tickets <TicketIcon size={20} className="text-[var(--text-muted)]" />
+        </h1>
         <p className="text-sm text-[var(--text-muted)] mt-1">Your digital tickets and QR codes.</p>
       </div>
 
@@ -28,7 +30,7 @@ const MyTickets = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {myTickets.map((t) => (
-            <div key={t.id} className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-5 flex items-center justify-between">
+            <div key={t.id} className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2 text-[var(--accent)] mb-1">
                   <TicketIcon size={16} />
@@ -36,10 +38,7 @@ const MyTickets = () => {
                 </div>
                 <p className="text-xs text-[var(--text-muted)]">{getEventName(t.event_id)}</p>
               </div>
-              <button
-                onClick={() => setQrTicketId(t.id)}
-                className="text-xs font-medium text-[var(--accent)] hover:underline"
-              >
+              <button onClick={() => setQrTicketId(t.id)} className="text-xs font-medium text-[var(--accent)] hover:underline">
                 View QR
               </button>
             </div>
@@ -48,10 +47,10 @@ const MyTickets = () => {
       )}
 
       {qrTicketId && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={() => setQrTicketId(null)}>
-          <div className="bg-white rounded-xl p-6 shadow-lg" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" onClick={() => setQrTicketId(null)}>
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6" onClick={(e) => e.stopPropagation()}>
             <img src={getTicketQrUrl(qrTicketId)} alt="Ticket QR" className="w-56 h-56" />
-            <button onClick={() => setQrTicketId(null)} className="mt-4 w-full text-sm font-medium text-[var(--text-muted)] hover:text-slate-800 transition">
+            <button onClick={() => setQrTicketId(null)} className="mt-4 w-full text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text)] transition">
               Close
             </button>
           </div>
