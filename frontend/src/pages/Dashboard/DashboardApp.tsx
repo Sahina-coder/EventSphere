@@ -2,12 +2,9 @@ import { useState } from "react";
 import Sidebar from "../../components/layout/Sidebar";
 import TopHeader from "../../components/layout/TopHeader";
 import Overview from "../Overview/Overview";
-import EventForm from "../Events/EventForm";
-import EventList from "../Events/EventList";
-import VenueForm from "../Venues/VenueForm";
-import VenueList from "../Venues/VenueList";
-import ResourceForm from "../Resources/ResourceForm";
-import ResourceList from "../Resources/ResourceList";
+import EventsPage from "../Events/EventsPage";
+import VenuesPage from "../Venues/VenuesPage";
+import ResourcesPage from "../Resources/ResourcesPage";
 import BookingForm from "../Bookings/BookingForm";
 import BookingList from "../Bookings/BookingList";
 import AllocationForm from "../Allocations/AllocationForm";
@@ -90,14 +87,14 @@ const DashboardApp = () => {
 
           {activeTab !== "Overview" && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl">
-              {activeTab === "Events" && (<><EventForm /><EventList /></>)}
-              {activeTab === "Venues" && (<><VenueForm /><VenueList /></>)}
-              {activeTab === "Resources" && (<><ResourceForm /><ResourceList /></>)}
+              {activeTab === "Events" && <EventsPage onNavigate={setActiveTab} />}
+{activeTab === "Venues" && <VenuesPage onNavigate={setActiveTab} />}
+{activeTab === "Resources" && <ResourcesPage onNavigate={setActiveTab} />}
               {activeTab === "Bookings" && (<><BookingForm /><BookingList /></>)}
               {activeTab === "Allocations" && (<><AllocationForm /><AllocationList /></>)}
               {activeTab === "Attendees" && <AttendeesPage onNavigate={setActiveTab} />}
-              {activeTab === "Vendors" && <VendorsPage />}
-              {activeTab === "Assignments" && <AssignmentsPage />}
+              {activeTab === "Vendors" && <VendorsPage onNavigate={setActiveTab} />}
+              {activeTab === "Assignments" && <AssignmentsPage onNavigate={setActiveTab} />}
               {activeTab === "Budget" && <Budget />}
               {activeTab === "Sponsorship" && <Sponsorship />}
               {activeTab === "Approvals" && <Approvals />}
