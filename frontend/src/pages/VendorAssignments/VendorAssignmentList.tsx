@@ -3,12 +3,16 @@ import { getVendorAssignments, deleteVendorAssignment } from "../../services/ven
 import { getEvents } from "../../services/eventService";
 import { getVendors } from "../../services/vendorService";
 
+const statusColor: Record<string, string> = {
+  Assigned: "#2dd4bf",
+  Confirmed: "#34d399",
+  Pending: "#f59e0b",
+  Rejected: "#fb7185",
+};
+
 const VendorAssignmentList = () => {
   const queryClient = useQueryClient();
-  const { data: assignments, isLoading, error } = useQuery({
-    queryKey: ["vendorAssignments"],
-    queryFn: getVendorAssignments,
-  });
+  const { data: assignments, isLoading, error } = useQuery({ queryKey: ["vendorAssignments"], queryFn: getVendorAssignments });
   const { data: events } = useQuery({ queryKey: ["events"], queryFn: getEvents });
   const { data: vendors } = useQuery({ queryKey: ["vendors"], queryFn: getVendors });
 
@@ -21,44 +25,46 @@ const VendorAssignmentList = () => {
   const getVendorName = (id: number) => vendors?.find((v) => v.id === id)?.name ?? `Vendor #${id}`;
 
   return (
-    <div className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-6">
-      <div className="flex items-center justify-between mb-5">
-        <h2 className="font-display text-lg font-semibold">Vendor Assignments</h2>
-        <span className="text-xs font-medium text-[var(--text-muted)] bg-slate-100 px-2.5 py-1 rounded-full">
+    <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="font-display text-base font-semibold text-[var(--text)]">Vendor Assignments</h2>
+        <span className="text-[10px] font-medium text-[var(--text-muted)] bg-white/5 px-2.5 py-1 rounded-full">
           {assignments ? assignments.length : 0} total
         </span>
       </div>
 
-      {isLoading && <p className="text-sm text-[var(--text-muted)]">Loading assignments…</p>}
-      {error && <p className="text-sm text-red-500">Couldn't reach the server. Is the backend running?</p>}
+      {isLoading && (
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => <div key={i} className="h-12 rounded-lg bg-white/5 animate-pulse" />)}
+        </div>
+      )}
+      {error && <p className="text-sm text-red-400">Couldn't reach the server. Is the backend running?</p>}
       {assignments && assignments.length === 0 && (
         <p className="text-sm text-[var(--text-muted)]">No assignments yet — assign a vendor to get started.</p>
       )}
 
-      <div className="space-y-3">
-        {assignments?.map((assignment) => (
-          <div
-            key={assignment.id}
-            className="border border-slate-100 rounded-lg px-4 py-3.5 flex items-center justify-between gap-4 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200"
-            style={{ borderLeft: "3px solid #4F46E5" }}
-          >
-            <div>
-              <h3 className="text-sm font-semibold text-slate-800">{getEventName(assignment.event_id)}</h3>
-              <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                {getVendorName(assignment.vendor_id)} · {assignment.service}
-              </p>
-              <span className="inline-block mt-1 text-xs font-medium px-2 py-0.5 rounded-full bg-indigo-50 text-[var(--accent)]">
-                {assignment.status}
-              </span>
+      <div className="divide-y divide-[var(--border)]">
+        {assignments?.map((assignment) => {
+          const color = statusColor[assignment.status] ?? "#94a3b8";
+          return (
+            <div key={assignment.id} className="py-3.5 first:pt-0 flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-[var(--text)] truncate">{getEventName(assignment.event_id)}</p>
+                <p className="text-xs text-[var(--text-muted)] truncate">
+                  {getVendorName(assignment.vendor_id)} · {assignment.service}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="text-[11px] font-medium px-2 py-1 rounded-full" style={{ backgroundColor: `${color}18`, color }}>
+                  {assignment.status}
+                </span>
+                <button onClick={() => deleteMutation.mutate(assignment.id)} className="text-[11px] font-medium text-red-400 hover:text-red-300">
+                  Remove
+                </button>
+              </div>
             </div>
-            <button
-              onClick={() => deleteMutation.mutate(assignment.id)}
-              className="text-xs font-medium text-red-500 hover:text-red-600 transition"
-            >
-              Remove
-            </button>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
