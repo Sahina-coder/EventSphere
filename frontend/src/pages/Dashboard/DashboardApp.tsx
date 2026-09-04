@@ -5,14 +5,12 @@ import Overview from "../Overview/Overview";
 import EventsPage from "../Events/EventsPage";
 import VenuesPage from "../Venues/VenuesPage";
 import ResourcesPage from "../Resources/ResourcesPage";
-import BookingForm from "../Bookings/BookingForm";
-import BookingList from "../Bookings/BookingList";
-import AllocationForm from "../Allocations/AllocationForm";
-import AllocationList from "../Allocations/AllocationList";
+import BookingsPage from "../Bookings/BookingsPage";
+import AllocationsPage from "../Allocations/AllocationsPage";
 import AttendeesPage from "../Attendees/AttendeesPage";
 import VendorsPage from "../Vendors/VendorsPage";
 import AssignmentsPage from "../VendorAssignments/AssignmentsPage";
-import Budget from "../Budget/Budget";
+import BudgetPage from "../Budget/BudgetPage";
 import Analytics from "../Analytics/Analytics";
 import HealthScore from "../HealthScore/HealthScore";
 import Risks from "../Risks/Risks";
@@ -22,11 +20,11 @@ import VenueRecommendations from "../Recommendations/VenueRecommendations";
 import Report from "../Report/Report";
 import Notifications from "../Notifications/Notifications";
 import VenueMap from "../VenueMap/VenueMap";
+import SponsorshipPage from "../Sponsorship/SponsorshipPage";
+import ApprovalsPage from "../Approvals/ApprovalsPage";
 import LostFound from "../LostFound/LostFound";
 import Simulator from "../Simulator/Simulator";
 import Incidents from "../Incidents/Incidents";
-import Sponsorship from "../Sponsorship/Sponsorship";
-import Approvals from "../Approvals/Approvals";
 import Forecast from "../Forecast/Forecast";
 import ReportExport from "../ReportExport/ReportExport";
 
@@ -88,16 +86,16 @@ const DashboardApp = () => {
           {activeTab !== "Overview" && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl">
               {activeTab === "Events" && <EventsPage onNavigate={setActiveTab} />}
-{activeTab === "Venues" && <VenuesPage onNavigate={setActiveTab} />}
-{activeTab === "Resources" && <ResourcesPage onNavigate={setActiveTab} />}
-              {activeTab === "Bookings" && (<><BookingForm /><BookingList /></>)}
-              {activeTab === "Allocations" && (<><AllocationForm /><AllocationList /></>)}
+              {activeTab === "Venues" && <VenuesPage onNavigate={setActiveTab} />}
+              {activeTab === "Resources" && <ResourcesPage onNavigate={setActiveTab} />}
+              {activeTab === "Bookings" && <BookingsPage onNavigate={setActiveTab} />}
+              {activeTab === "Allocations" && <AllocationsPage onNavigate={setActiveTab} />}             
               {activeTab === "Attendees" && <AttendeesPage onNavigate={setActiveTab} />}
               {activeTab === "Vendors" && <VendorsPage onNavigate={setActiveTab} />}
               {activeTab === "Assignments" && <AssignmentsPage onNavigate={setActiveTab} />}
-              {activeTab === "Budget" && <Budget />}
-              {activeTab === "Sponsorship" && <Sponsorship />}
-              {activeTab === "Approvals" && <Approvals />}
+              {activeTab === "Budget" && <BudgetPage onNavigate={setActiveTab} />}
+              {activeTab === "Sponsorship" && <SponsorshipPage />}
+              {activeTab === "Approvals" && <ApprovalsPage />}
               {activeTab === "Analytics" && <Analytics />}
               {activeTab === "Health Score" && <HealthScore />}
               {activeTab === "Risks" && <Risks />}

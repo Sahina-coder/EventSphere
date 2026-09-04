@@ -184,16 +184,35 @@ const Landing = () => {
       {/* Features */}
       <section id="features" className="max-w-6xl mx-auto px-6 py-20 relative z-10">
         <Reveal><h2 className="font-display text-3xl font-bold text-center mb-12 text-white">Everything You Need to Run Smarter Events</h2></Reveal>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" style={{ perspective: 1200 }}>
           {features.map((f, i) => (
             <Reveal key={f.title} delay={i * 0.06} direction={i % 2 === 0 ? "left" : "right"}>
-              <TiltCard className="ld-card rounded-xl p-6">
-                <div style={{ transform: "translateZ(20px)" }}>
-                  <div className="w-10 h-10 rounded-lg bg-indigo-500/15 text-indigo-300 flex items-center justify-center mb-4">
-                    <f.icon size={20} />
+              <TiltCard className="ld-card rounded-xl p-6 relative overflow-visible">
+                <div className="relative" style={{ transform: "translateZ(45px)", transformStyle: "preserve-3d" }}>
+                  <div className="relative w-12 h-12 mb-5" style={{ transformStyle: "preserve-3d" }}>
+                    <div
+                      className="absolute inset-0 rounded-2xl border border-indigo-400/30"
+                      style={{
+                        transform: "translateZ(-8px) rotate(12deg)",
+                        background: "radial-gradient(circle, rgba(129,140,248,0.15), transparent 70%)",
+                      }}
+                    />
+                    <div
+                      className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500/25 to-purple-500/10 border border-indigo-400/20 text-indigo-300 flex items-center justify-center shadow-lg"
+                      style={{ transform: "translateZ(10px)", boxShadow: "0 8px 24px -8px rgba(99,102,241,0.5)" }}
+                    >
+                      <f.icon size={20} />
+                    </div>
                   </div>
-                  <h3 className="font-display text-base font-semibold mb-1.5 text-white">{f.title}</h3>
-                  <p className="text-sm ld-muted">{f.desc}</p>
+                  <h3
+                    className="font-display text-base font-semibold mb-1.5 text-white"
+                    style={{ transform: "translateZ(20px)" }}
+                  >
+                    {f.title}
+                  </h3>
+                  <p className="text-sm ld-muted" style={{ transform: "translateZ(8px)" }}>
+                    {f.desc}
+                  </p>
                 </div>
               </TiltCard>
             </Reveal>
