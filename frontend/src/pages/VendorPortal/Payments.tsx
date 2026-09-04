@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { Wallet } from "lucide-react";
 import { getVendorAssignments } from "../../services/vendorAssignmentService";
 import { getEvents } from "../../services/eventService";
 import { getExpenses } from "../../services/expenseService";
@@ -18,7 +19,9 @@ const Payments = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold">Payments</h1>
+        <h1 className="font-display text-2xl font-bold text-[var(--text)] flex items-center gap-2">
+          Payments <Wallet size={20} className="text-[var(--text-muted)]" />
+        </h1>
         <p className="text-sm text-[var(--text-muted)] mt-1">Expense records linked to your assigned events.</p>
       </div>
 
@@ -26,24 +29,24 @@ const Payments = () => {
         <p className="text-sm text-[var(--text-muted)]">Select a vendor identity from the sidebar.</p>
       ) : (
         <>
-          <div className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-5">
-            <p className="text-2xl font-semibold text-slate-900">₹{total.toLocaleString()}</p>
-            <p className="text-xs text-[var(--text-muted)]">Total recorded across your events</p>
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5">
+            <p className="text-2xl font-bold text-[var(--text)]">₹{total.toLocaleString()}</p>
+            <p className="text-xs text-[var(--text-muted)] mt-1">Total recorded across your events</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-6">
-            <h2 className="font-display text-base font-semibold mb-4">Records</h2>
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6">
+            <h2 className="font-display text-base font-semibold text-[var(--text)] mb-4">Records</h2>
             {relatedExpenses.length === 0 ? (
               <p className="text-sm text-[var(--text-muted)]">No expense records for your events yet.</p>
             ) : (
-              <div className="space-y-2">
+              <div className="divide-y divide-[var(--border)]">
                 {relatedExpenses.map((exp) => (
-                  <div key={exp.id} className="flex justify-between border-b border-slate-50 pb-2 last:border-0">
+                  <div key={exp.id} className="py-3 first:pt-0 flex justify-between">
                     <div>
-                      <p className="text-sm font-medium text-slate-800">{exp.category}</p>
+                      <p className="text-sm font-medium text-[var(--text)]">{exp.category}</p>
                       <p className="text-xs text-[var(--text-muted)]">{getEventName(exp.event_id)}</p>
                     </div>
-                    <span className="text-sm font-medium text-slate-800">₹{exp.amount.toLocaleString()}</span>
+                    <span className="text-sm font-medium text-[var(--text)]">₹{exp.amount.toLocaleString()}</span>
                   </div>
                 ))}
               </div>
