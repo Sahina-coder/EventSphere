@@ -93,7 +93,6 @@ const Landing = () => {
 
   return (
     <div className="landing-dark min-h-screen">
-      
       {/* Hero with 3D scene */}
       <section className="relative pt-20">
         <div className="absolute inset-0 z-0">
@@ -111,14 +110,14 @@ const Landing = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="ld-chip inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full mb-5"
+              className="ld-chip inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full mb-6"
             >
               <Sparkles size={12} /> Intelligent Event Decision Support
             </motion.span>
-            <h1 className="font-display text-4xl md:text-5xl font-bold leading-tight ld-gradient-text">
+            <h1 className="font-display text-4xl md:text-5xl font-bold leading-[1.15] ld-gradient-text">
               Plan Smarter. Manage Better. Create Events That Perform.
             </h1>
-            <p className="ld-muted mt-5 text-base leading-relaxed max-w-md">
+            <p className="ld-muted mt-6 text-base max-w-md">
               EventSphere is an intelligent event management and decision-support platform that helps organizers plan, manage, analyze, and optimize events from one unified platform.
             </p>
             <div className="flex items-center gap-4 mt-8">
@@ -166,7 +165,7 @@ const Landing = () => {
       </section>
 
       {/* Stats */}
-      <section className="ld-border-y py-12 relative z-10">
+      <section className="ld-border-y py-14 relative z-10">
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {stats.map((s, i) => (
             <Reveal key={s.label} delay={i * 0.08}>
@@ -182,8 +181,13 @@ const Landing = () => {
       </section>
 
       {/* Features */}
-      <section id="features" className="max-w-6xl mx-auto px-6 py-20 relative z-10">
-        <Reveal><h2 className="font-display text-3xl font-bold text-center mb-12 text-white">Everything You Need to Run Smarter Events</h2></Reveal>
+      <section id="features" className="max-w-6xl mx-auto px-6 py-24 relative z-10">
+        <Reveal>
+          <div className="text-center mb-14">
+            <span className="ld-eyebrow justify-center">Platform</span>
+            <h2 className="ld-section-title text-white">Everything You Need to Run Smarter Events</h2>
+          </div>
+        </Reveal>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" style={{ perspective: 1200 }}>
           {features.map((f, i) => (
             <Reveal key={f.title} delay={i * 0.06} direction={i % 2 === 0 ? "left" : "right"}>
@@ -204,10 +208,7 @@ const Landing = () => {
                       <f.icon size={20} />
                     </div>
                   </div>
-                  <h3
-                    className="font-display text-base font-semibold mb-1.5 text-white"
-                    style={{ transform: "translateZ(20px)" }}
-                  >
+                  <h3 className="font-display text-base font-semibold mb-1.5 text-white" style={{ transform: "translateZ(20px)" }}>
                     {f.title}
                   </h3>
                   <p className="text-sm ld-muted" style={{ transform: "translateZ(8px)" }}>
@@ -221,12 +222,13 @@ const Landing = () => {
       </section>
 
       {/* Intelligence Section */}
-      <section className="ld-section-bg py-20 relative z-10">
+      <section className="ld-section-bg py-24 relative z-10">
         <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <Reveal direction="left">
             <div>
-              <h2 className="font-display text-3xl font-bold mb-4 text-white">Don't Just Manage Your Events. Understand Them.</h2>
-              <p className="ld-muted leading-relaxed">
+              <span className="ld-eyebrow">Intelligence</span>
+              <h2 className="ld-section-title text-white mb-4">Don't Just Manage Your Events. Understand Them.</h2>
+              <p className="ld-muted">
                 EventSphere uses your event data to generate intelligent insights and decision-support recommendations — surfacing risks and opportunities before they become problems.
               </p>
             </div>
@@ -244,7 +246,7 @@ const Landing = () => {
                   <p className="text-xs font-medium text-white/60 mb-1">Recommended Action</p>
                   <p className="text-sm text-white/90">Send reminder notifications 24 hours before the event.</p>
                 </div>
-                <Link to="/dashboard" className="text-sm font-medium text-indigo-300 flex items-center gap-1 hover:text-indigo-200 transition">
+                <Link to="/dashboard" className="text-sm font-medium ld-link-accent flex items-center gap-1">
                   Take Action <ArrowRight size={14} />
                 </Link>
               </div>
@@ -254,8 +256,13 @@ const Landing = () => {
       </section>
 
       {/* How It Works */}
-      <section id="how-it-works" className="max-w-6xl mx-auto px-6 py-20 relative z-10">
-        <Reveal><h2 className="font-display text-3xl font-bold text-center mb-12 text-white">How It Works</h2></Reveal>
+      <section id="how-it-works" className="max-w-6xl mx-auto px-6 py-24 relative z-10">
+        <Reveal>
+          <div className="text-center mb-14">
+            <span className="ld-eyebrow justify-center">Process</span>
+            <h2 className="ld-section-title text-white">How It Works</h2>
+          </div>
+        </Reveal>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {steps.map((s, i) => (
             <Reveal key={s.num} delay={i * 0.08}>
@@ -270,9 +277,14 @@ const Landing = () => {
       </section>
 
       {/* Role-Based Platform */}
-      <section className="ld-border-y py-20 relative z-10">
+      <section className="ld-border-y py-24 relative z-10">
         <div className="max-w-6xl mx-auto px-6">
-          <Reveal><h2 className="font-display text-3xl font-bold text-center mb-12 text-white">One Platform. Three Experiences.</h2></Reveal>
+          <Reveal>
+            <div className="text-center mb-14">
+              <span className="ld-eyebrow justify-center">Roles</span>
+              <h2 className="ld-section-title text-white">One Platform. Three Experiences.</h2>
+            </div>
+          </Reveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {roles.map((r, i) => (
               <Reveal key={r.title} delay={i * 0.08} direction={i === 0 ? "left" : i === 2 ? "right" : "up"}>
@@ -280,7 +292,7 @@ const Landing = () => {
                   <div id={r.title.toLowerCase() + "s"} style={{ transform: "translateZ(20px)" }}>
                     <h3 className="font-display text-lg font-semibold mb-2 text-white">{r.title}</h3>
                     <p className="text-sm ld-muted mb-5">{r.desc}</p>
-                    <Link to={r.to} className="text-sm font-medium text-indigo-300 flex items-center gap-1 hover:text-indigo-200 transition">
+                    <Link to={r.to} className="text-sm font-medium ld-link-accent flex items-center gap-1">
                       {r.cta} <ArrowRight size={14} />
                     </Link>
                   </div>
@@ -292,9 +304,10 @@ const Landing = () => {
       </section>
 
       {/* Dashboard Preview */}
-      <section className="max-w-6xl mx-auto px-6 py-20 text-center relative z-10">
+      <section className="max-w-6xl mx-auto px-6 py-24 text-center relative z-10">
         <Reveal>
-          <h2 className="font-display text-3xl font-bold mb-4 text-white">Everything Your Event Needs. One Intelligent Dashboard.</h2>
+          <span className="ld-eyebrow justify-center">Product</span>
+          <h2 className="ld-section-title text-white mb-4">Everything Your Event Needs. One Intelligent Dashboard.</h2>
           <p className="ld-muted max-w-xl mx-auto mb-10">
             KPI cards, real-time analytics, risk indicators, and recommendations — all in one place.
           </p>
@@ -321,11 +334,14 @@ const Landing = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="ld-section-bg py-20 relative z-10">
+      <section className="ld-section-bg py-24 relative z-10">
         <div className="max-w-6xl mx-auto px-6">
           <Reveal>
-            <h2 className="font-display text-3xl font-bold text-center mb-3 text-white">Trusted by Event Teams</h2>
-            <p className="text-center text-xs text-white/30 mb-12">Demo testimonials for illustration</p>
+            <div className="text-center mb-14">
+              <span className="ld-eyebrow justify-center">Social Proof</span>
+              <h2 className="ld-section-title text-white mb-2">Trusted by Event Teams</h2>
+              <p className="text-xs text-white/30">Demo testimonials for illustration</p>
+            </div>
           </Reveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
@@ -356,8 +372,13 @@ const Landing = () => {
       </section>
 
       {/* Team */}
-      <section id="about" className="max-w-6xl mx-auto px-6 py-20 relative z-10">
-        <Reveal><h2 className="font-display text-3xl font-bold text-center mb-12 text-white">Built by Team EventSphere</h2></Reveal>
+      <section id="about" className="max-w-6xl mx-auto px-6 py-24 relative z-10">
+        <Reveal>
+          <div className="text-center mb-14">
+            <span className="ld-eyebrow justify-center">Team</span>
+            <h2 className="ld-section-title text-white">Built by Team EventSphere</h2>
+          </div>
+        </Reveal>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
           {team.map((m, i) => (
             <Reveal key={m.name} delay={i * 0.06}>
@@ -377,9 +398,14 @@ const Landing = () => {
       </section>
 
       {/* FAQ */}
-      <section className="ld-border-y py-20 relative z-10">
+      <section className="ld-border-y py-24 relative z-10">
         <div className="max-w-3xl mx-auto px-6">
-          <Reveal><h2 className="font-display text-3xl font-bold text-center mb-12 text-white">Frequently Asked Questions</h2></Reveal>
+          <Reveal>
+            <div className="text-center mb-14">
+              <span className="ld-eyebrow justify-center">Support</span>
+              <h2 className="ld-section-title text-white">Frequently Asked Questions</h2>
+            </div>
+          </Reveal>
           <div className="space-y-2">
             {faqs.map((f, i) => (
               <div key={i} className="ld-card rounded-lg overflow-hidden">
@@ -410,8 +436,9 @@ const Landing = () => {
       <section className="max-w-4xl mx-auto px-6 py-24 text-center relative z-10">
         <div className="ld-glow-blob ld-blob-3" />
         <Reveal>
-          <h2 className="font-display text-3xl font-bold mb-4 ld-gradient-text relative z-10">Ready to Make Your Next Event Smarter?</h2>
-          <p className="ld-muted mb-8 relative z-10">
+          <span className="ld-eyebrow justify-center relative z-10">Get Started</span>
+          <h2 className="ld-section-title ld-gradient-text mb-4 relative z-10">Ready to Make Your Next Event Smarter?</h2>
+          <p className="ld-muted mb-8 relative z-10 mx-auto">
             Bring event management, analytics, and intelligent decision-making together in one platform.
           </p>
           <div className="flex items-center justify-center gap-4 relative z-10">
