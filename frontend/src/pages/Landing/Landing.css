@@ -7,17 +7,45 @@
   --ld-text-muted: #8ba3a0;
   --ld-accent: #2dd4bf;
   --ld-accent-2: #34d399;
+  --ld-accent-warm: #fbbf24;
   background-color: var(--ld-bg);
   color: var(--ld-text);
   position: relative;
   overflow: hidden;
+  line-height: 1.5;
+}
+
+.landing-dark h1,
+.landing-dark h2,
+.landing-dark h3 {
+  letter-spacing: -0.02em;
+}
+
+.ld-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ld-accent);
+  margin-bottom: 14px;
+}
+
+.ld-eyebrow::before {
+  content: "";
+  width: 14px;
+  height: 1.5px;
+  background: var(--ld-accent);
+  display: inline-block;
 }
 
 .ld-glow-blob {
   position: absolute;
   border-radius: 9999px;
   filter: blur(90px);
-  opacity: 0.35;
+  opacity: 0.3;
   pointer-events: none;
   z-index: 0;
 }
@@ -91,22 +119,17 @@
 
 .ld-muted {
   color: var(--ld-text-muted);
+  line-height: 1.65;
 }
 
-.ld-border-t {
-  border-top: 1px solid var(--ld-border);
-}
-.ld-border-b {
-  border-bottom: 1px solid var(--ld-border);
-}
+.ld-border-t { border-top: 1px solid var(--ld-border); }
+.ld-border-b { border-bottom: 1px solid var(--ld-border); }
 .ld-border-y {
   border-top: 1px solid var(--ld-border);
   border-bottom: 1px solid var(--ld-border);
 }
 
-.ld-section-bg {
-  background: var(--ld-bg-alt);
-}
+.ld-section-bg { background: var(--ld-bg-alt); }
 
 .ld-chip {
   background: rgba(45, 212, 191, 0.1);
@@ -114,10 +137,36 @@
   color: var(--ld-accent);
 }
 
-.ld-input-dark {
-  background: #0a100f;
-  border: 1px solid var(--ld-border);
-  color: var(--ld-text);
+.ld-chip-warm {
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  color: var(--ld-accent-warm);
+}
+
+.ld-section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .ld-section-title { font-size: 2.25rem; }
+}
+
+.ld-section-sub {
+  color: var(--ld-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 32rem;
+}
+
+.ld-link-accent {
+  color: var(--ld-accent);
+  transition: color 0.2s ease;
+}
+.ld-link-accent:hover {
+  color: var(--ld-accent-2);
 }
 
 .ld-shimmer {
