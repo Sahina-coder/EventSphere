@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Menu, Search, Bell, ChevronDown } from "lucide-react";
+import { Menu, Search, Bell, ChevronDown, LogOut } from "lucide-react";
 import { getNotifications } from "../../services/notificationService";
+import { useAuth } from "../../context/AuthContext";
 
 interface TopHeaderProps {
   title: string;
@@ -14,6 +16,17 @@ const TopHeader = ({ title, subtitle, onMenuClick, onNotificationsClick }: TopHe
   const [profileOpen, setProfileOpen] = useState(false);
   const { data: notifications } = useQuery({ queryKey: ["notifications"], queryFn: getNotifications });
   const unreadCount = notifications?.filter((n) => !n.is_read).length ?? 0;
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const initials = user?.name
+    ? user.name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase()
+    : "OR";
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <header className="bg-[var(--card)] border-b border-[var(--border)] sticky top-0 z-20">
@@ -48,19 +61,27 @@ const TopHeader = ({ title, subtitle, onMenuClick, onNotificationsClick }: TopHe
           </button>
 
           <div className="relative">
-            <button
-              onClick={() => setProfileOpen(!profileOpen)}
-              className="flex items-center gap-2"
-            >
+            <button onClick={() => setProfileOpen(!profileOpen)} className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-[var(--accent)]/20 text-[var(--accent)] flex items-center justify-center text-xs font-semibold">
-                OR
+                {initials}
               </div>
               <div className="hidden sm:block text-left">
-                <p className="text-xs font-medium text-[var(--text)] leading-tight">Organizer</p>
-                <p className="text-[10px] text-[var(--text-muted)] leading-tight">Admin</p>
+                <p className="text-xs font-medium text-[var(--text)] leading-tight">{user?.name ?? "Organizer"}</p>
+                <p className="text-[10px] text-[var(--text-muted)] leading-tight">{user?.role ?? "Admin"}</p>
               </div>
               <ChevronDown size={14} className="text-[var(--text-muted)] hidden sm:block" />
             </button>
+
+            {profileOpen && (
+              <div className="absolute right-0 top-11 z-30 bg-[var(--card)] border border-[var(--border)] rounded-lg shadow-lg py-1 w-40">
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-3 py-2 text-xs text-red-400 hover:bg-white/5 flex items-center gap-2"
+                >
+                  <LogOut size={13} /> Log out
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

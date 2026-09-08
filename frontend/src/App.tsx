@@ -18,39 +18,67 @@ import Payments from "./pages/VendorPortal/Payments";
 import Reviews from "./pages/VendorPortal/Reviews";
 import { AttendeeProvider } from "./context/AttendeeContext";
 import { VendorProvider } from "./context/VendorContext";
+import { AuthProvider } from "./context/AuthContext";
 import GlobalNav from "./components/GlobalNav";
 import GlobalCursorGlow from "./components/GlobalCursorGlow";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <BrowserRouter>
-      <AttendeeProvider>
-        <VendorProvider>
-          <GlobalNav />
-          <GlobalCursorGlow />
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/dashboard/*" element={<DashboardApp />} />
-            <Route path="/attendee" element={<AttendeeLayout />}>
-              <Route index element={<AttendeeDashboardHome />} />
-              <Route path="discover" element={<DiscoverEvents />} />
-              <Route path="tickets" element={<MyTickets />} />
-              <Route path="schedule" element={<Schedule />} />
-              <Route path="feedback" element={<Feedback />} />
-            </Route>
-            <Route path="/vendor" element={<VendorLayout />}>
-              <Route index element={<VendorDashboardHome />} />
-              <Route path="opportunities" element={<Opportunities />} />
-              <Route path="assignments" element={<MyAssignments />} />
-              <Route path="payments" element={<Payments />} />
-              <Route path="reviews" element={<Reviews />} />
-            </Route>
-          </Routes>
-        </VendorProvider>
-      </AttendeeProvider>
+      <AuthProvider>
+        <AttendeeProvider>
+          <VendorProvider>
+            <GlobalNav />
+            <GlobalCursorGlow />
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+
+              <Route
+                path="/dashboard/*"
+                element={
+                  <ProtectedRoute allowedRole="Organizer">
+                    <DashboardApp />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/attendee"
+                element={
+                  <ProtectedRoute allowedRole="Attendee">
+                    <AttendeeLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<AttendeeDashboardHome />} />
+                <Route path="discover" element={<DiscoverEvents />} />
+                <Route path="tickets" element={<MyTickets />} />
+                <Route path="schedule" element={<Schedule />} />
+                <Route path="feedback" element={<Feedback />} />
+              </Route>
+
+              <Route
+                path="/vendor"
+                element={
+                  <ProtectedRoute allowedRole="Vendor">
+                    <VendorLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<VendorDashboardHome />} />
+                <Route path="opportunities" element={<Opportunities />} />
+                <Route path="assignments" element={<MyAssignments />} />
+                <Route path="payments" element={<Payments />} />
+                <Route path="reviews" element={<Reviews />} />
+              </Route>
+            </Routes>
+          </VendorProvider>
+        </AttendeeProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
