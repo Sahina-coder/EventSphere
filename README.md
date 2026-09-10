@@ -192,6 +192,3 @@ For a more detailed breakdown, see [`PROJECT_STATE.md`](./PROJECT_STATE.md).
 
 ---
 
-## License / Credits
-
-Built by Sahina as a full-stack event management coursework project.
