@@ -1,295 +1,115 @@
-# EventSphere - Project State
+# EventSphere — Project State
 
-> **Last updated:** Current development build
+_Last updated: reflects current build as of this session._
 
-This document tracks what has been implemented, what is still incomplete, and the main areas that can be worked on next.
+## Status Summary
 
----
-
-## Overall Status
-
-| Area                             | Status      |
-| -------------------------------- | ----------- |
-| Core Event Management            | ✅ Complete  |
-| Registration & Vendor Management | ✅ Complete  |
-| Intelligence & Decision Support  | ✅ Complete  |
-| Finance & Reporting              | ✅ Complete  |
-| UI/UX Redesign                   | ✅ Complete  |
-| Real Authentication / RBAC       | ❌ Not built |
-| Automated Testing                | ❌ Not built |
-| Deployment / CI-CD               | ❌ Not built |
-| Database Migrations              | ❌ Not built |
+| Area | Status |
+|---|---|
+| Milestone 1 (Core Event Management) | ✅ Complete |
+| Milestone 2 (Registration & Vendors) | ✅ Complete |
+| Milestone 3/4 (Intelligence, Finance, Decision Support) | ✅ Complete |
+| UI/UX Redesign (Landing, Auth, 3 Portals) | ✅ Complete |
+| Command-Center Visual Redesign (dark/teal, 3D, stat modules) | ✅ Complete for most pages (see below) |
+| Real Authentication (RBAC via JWT) | ✅ Complete |
+| Automated Testing | ❌ Not built |
+| Deployment / CI-CD | ❌ Not built |
 
 ---
 
-# Implemented Features
+## ✅ Milestone 1 — Core Event Management
 
-## 1. Core Event Management
+| Feature | Backend | Frontend |
+|---|---|---|
+| Events (CRUD) | ✅ | ✅ Command-center style |
+| Venues (CRUD) | ✅ | ✅ Command-center style |
+| Resources (inventory) | ✅ | ✅ Command-center style |
+| Bookings (conflict detection) | ✅ | ✅ Command-center style |
+| Allocations (resource↔event) | ✅ | ✅ Command-center style |
+| Report (summary KPIs) | ✅ | ✅ Animated counters |
 
-| Feature                       | Backend | Frontend |
-| ----------------------------- | :-----: | :------: |
-| Events (CRUD)                 |    ✅    |     ✅    |
-| Venues (CRUD)                 |    ✅    |     ✅    |
-| Resources / Inventory         |    ✅    |     ✅    |
-| Bookings + Conflict Detection |    ✅    |     ✅    |
-| Resource Allocations          |    ✅    |     ✅    |
-| Event Summary Reports         |    ✅    |     ✅    |
+## ✅ Milestone 2 — Registration & Vendor Management
 
----
+| Feature | Backend | Frontend |
+|---|---|---|
+| Attendees (validation + dup check) | ✅ | ✅ Command-center style |
+| Tickets (unique codes) | ✅ | ✅ |
+| QR Codes (attendee+event JSON) | ✅ | ✅ |
+| Attendance status tracking | ✅ | ✅ |
+| Vendors (CRUD) | ✅ | ✅ Command-center style |
+| Vendor Assignments | ✅ | ✅ Command-center style |
 
-## 2. Registration & Vendor Management
+## ✅ Milestone 3 & 4 — Intelligence, Finance & Decision Support
 
-| Feature                               | Backend | Frontend |
-| ------------------------------------- | :-----: | :------: |
-| Attendee Registration                 |    ✅    |     ✅    |
-| Attendee Validation / Duplicate Check |    ✅    |     ✅    |
-| Ticket Generation                     |    ✅    |     ✅    |
-| Unique Ticket Codes                   |    ✅    |     ✅    |
-| QR Codes                              |    ✅    |     ✅    |
-| Attendance Tracking                   |    ✅    |     ✅    |
-| Vendor Management                     |    ✅    |     ✅    |
-| Vendor Assignments                    |    ✅    |     ✅    |
+| Feature | Backend | Frontend |
+|---|---|---|
+| Budget & Expenses (threshold alerts) | ✅ | ✅ Command-center style |
+| Sponsorship Management | ✅ | ✅ Command-center style |
+| Approval Workflow | ✅ | ✅ Command-center style |
+| Analytics Dashboard (charts + KPIs) | ✅ | ✅ Command-center style |
+| Event Health Score | ✅ | ✅ Command-center style |
+| Risk Detection & Alerts | ✅ | ✅ Command-center style |
+| What-If Simulator (read-only) | ✅ | ⏳ Original card style |
+| Forecasting (attendance/budget/resource) | ✅ | ⏳ Original card style |
+| Feedback & Evaluation | ✅ | ⏳ Original card style |
+| Certificate Generation & Verification | ✅ | ⏳ Original card style |
+| Smart Venue Recommendation | ✅ | ⏳ Original card style |
+| Notification & Announcement Center | ✅ | ⏳ Original card style |
+| Interactive Venue Map | ✅ | ⏳ Original card style |
+| Lost & Found | ✅ | ⏳ Original card style |
+| Incident Management | ✅ | ⏳ Original card style |
+| Reports & Export (PDF + CSV) | ✅ | ⏳ Original card style |
 
----
+*("Command-center style" = stat modules with colored icon badges, search/filter, donut-chart breakdown, quick actions — matching the new Overview dashboard. "Original card style" = earlier flat white/dark card layout, fully functional but visually a generation behind.)*
 
-## 3. Intelligence, Finance & Decision Support
+## ✅ Authentication & RBAC
 
-| Feature                               | Backend | Frontend |
-| ------------------------------------- | :-----: | :------: |
-| Budget & Expense Tracking             |    ✅    |     ✅    |
-| Expense Threshold Alerts              |    ✅    |     ✅    |
-| Sponsorship Management                |    ✅    |     ✅    |
-| Approval Workflow                     |    ✅    |     ✅    |
-| Analytics Dashboard                   |    ✅    |     ✅    |
-| Event Health Score                    |    ✅    |     ✅    |
-| Risk Detection & Alerts               |    ✅    |     ✅    |
-| What-If Simulator                     |    ✅    |     ✅    |
-| Attendance Forecasting                |    ✅    |     ✅    |
-| Budget Forecasting                    |    ✅    |     ✅    |
-| Resource Forecasting                  |    ✅    |     ✅    |
-| Feedback & Evaluation                 |    ✅    |     ✅    |
-| Certificate Generation & Verification |    ✅    |     ✅    |
-| Smart Venue Recommendation            |    ✅    |     ✅    |
-| Notification & Announcement Center    |    ✅    |     ✅    |
-| Interactive Venue Map                 |    ✅    |     ✅    |
-| Lost & Found                          |    ✅    |     ✅    |
-| Incident Management                   |    ✅    |     ✅    |
-| PDF / CSV Report Export               |    ✅    |     ✅    |
+| Piece | Status |
+|---|---|
+| User registration (name, email, password, role) | ✅ Backend + frontend |
+| Password hashing (bcrypt) | ✅ |
+| JWT login, 7-day expiry | ✅ |
+| `/auth/me` current-user lookup | ✅ |
+| Frontend `AuthContext` (persisted to localStorage) | ✅ |
+| `ProtectedRoute` guarding `/dashboard`, `/attendee`, `/vendor` by role | ✅ |
+| Logout (Dashboard TopHeader + both portal sidebars) | ✅ |
+| Auto-linking a logged-in Attendee/Vendor user to their own `attendees`/`vendors` row | ❌ Not built — still uses an in-portal "viewing as" selector |
 
----
+## ✅ UI/UX
 
-# UI / UX Status
-
-| Area                |   Status  | Notes                                                                           |
-| ------------------- | :-------: | ------------------------------------------------------------------------------- |
-| Landing Page        |     ✅     | Dark theme, Three.js hero, tilt cards, scroll animations, live stats            |
-| Auth Screens        | ✅ UI only | Login, Signup and Forgot Password screens; backend authentication not connected |
-| Organizer Dashboard |     ✅     | Grouped sidebar, dark theme, animated KPI cards                                 |
-| Attendee Portal     |     ✅     | Identity switching, event discovery, tickets and schedule                       |
-| Vendor Portal       |     ✅     | Identity switching, opportunities, assignments and payments                     |
-| Global Dark Theme   |     ✅     | CSS variable overrides in `index.css`                                           |
-
----
-
-# Known Gaps
-
-These are the main parts that are currently incomplete.
-
-### 1. Real Authentication / RBAC
-
-There is currently no JWT/session-based authentication system.
-
-The portals can be accessed directly, and attendee/vendor identity is selected through a client-side "viewing as" option.
-
-A future implementation should include:
-
-* User accounts
-* Password hashing
-* JWT or session-based authentication
-* Protected routes
-* Role-based permissions
+| Piece | Status | Notes |
+|---|---|---|
+| Landing page | ✅ | Dark teal theme, Three.js hero scene, WebGL glow-cursor trail, pill-shaped animated navbar (GSAP), 3D tilt cards with layered icon depth, scroll-triggered 3D-rotation reveals, animated counting stats, eyebrow-label section headers, custom gradient CTA button |
+| Auth UI | ✅ | Split-panel diagonal card with sliding toggle animation between Login/Signup, floating-label inputs, connected to real JWT backend |
+| Organizer Dashboard | ✅ | Dark teal command-center theme, grouped sidebar, custom brand logo (SVG), Overview home page (featured event, readiness ring, stat modules, budget donut, recent approvals) |
+| Attendee Portal | ✅ | Command-center styled: stat modules, avatar rows, identity switcher |
+| Vendor Portal | ✅ | Command-center styled: stat modules, avatar rows, identity switcher |
+| Brand logo | ✅ | Custom SVG (deep blue/indigo gradient, abstract "E" + orbital ring) used in sidebar, pill nav, and auth pages |
+| Global dark theme | ✅ | Teal/emerald accent (`#2dd4bf`) applied via CSS variable overrides across Dashboard/Attendee/Vendor; Landing manages its own independent dark styling |
 
 ---
 
-### 2. Vendor Reviews
+## ❌ Known Gaps (Not Built)
 
-The Vendor Portal contains a reviews-related placeholder, but there is currently no vendor-rating table or complete review workflow.
-
----
-
-### 3. Automated Testing
-
-There is currently no dedicated automated test suite covering:
-
-* API integration
-* Business logic
-* Frontend behaviour
-* Performance
-* Security
-* Usability
+- **Automated testing** — no integration, performance, security, or usability test suite (manual testing only, done throughout build)
+- **Deployment / CI-CD** — runs on `localhost` only; no Docker packaging, no GitHub Actions pipeline, not hosted anywhere public
+- **Database migrations** — no Alembic; schema changes rely on fresh `create_all()`, not versioned migrations
+- **Vendor Reviews** — placeholder page in Vendor Portal; no vendor-rating table exists
+- **User ↔ Attendee/Vendor auto-linking** — logged-in Attendees/Vendors still manually select which database record they're acting as, rather than it being tied automatically to their account
+- **Command-center visual pass incomplete on ~10 pages** — Feedback, Certificates, Venue Match, Simulator, Forecast, Notifications, Venue Map, Lost & Found, Incidents, Report, and Export are functionally complete but still use the earlier (pre-redesign) visual style
+- **Expanded documentation** — README/Architecture/Project State exist; a dedicated per-endpoint API reference is not yet a separate file
 
 ---
 
-### 4. Deployment / CI-CD
+## Database Tables (current)
 
-The project currently runs in a local development environment.
-
-Not yet configured:
-
-* Docker
-* Production hosting
-* GitHub Actions
-* CI/CD pipeline
-* Production environment variables
+`users` · `events` · `venues` · `resources` · `bookings` · `allocations` · `attendees` · `tickets` · `vendors` · `vendor_assignments` · `expenses` · `sponsors` · `approval_requests` · `feedback` · `certificates` · `notifications` · `venue_map_points` · `lost_found_items` · `incidents`
 
 ---
 
-### 5. Database Migrations
+## Suggested Next Steps (pick one)
 
-The backend currently uses:
-
-```python
-Base.metadata.create_all(bind=engine)
-```
-
-There is no Alembic migration workflow yet.
-
-As a result, database schema changes are currently handled through fresh table creation or manual database changes.
-
----
-
-# Database Tables
-
-Current database tables:
-
-```text
-events
-venues
-resources
-bookings
-allocations
-attendees
-tickets
-vendors
-vendor_assignments
-expenses
-sponsors
-approval_requests
-feedback
-certificates
-notifications
-venue_map_points
-lost_found_items
-incidents
-```
-
----
-
-# Recommended Next Steps
-
-The project is currently at a point where the main feature set is in place. The next work should focus more on reliability and production readiness than on adding large numbers of new modules.
-
-### Priority 1 — Authentication & RBAC
-
-Implement:
-
-```text
-Registration
-    ↓
-Password hashing
-    ↓
-Login
-    ↓
-JWT / Session
-    ↓
-Role-based access
-    ↓
-Protected routes
-```
-
-Roles could include:
-
-* Organizer
-* Attendee
-* Vendor
-
----
-
-### Priority 2 — Testing
-
-Start with the backend's core business logic and gradually expand to the frontend.
-
-Suggested order:
-
-```text
-API endpoints
-    ↓
-Validation
-    ↓
-Conflict detection
-    ↓
-Analytics / scoring
-    ↓
-Recommendation logic
-    ↓
-Frontend flows
-```
-
----
-
-### Priority 3 — Database Migrations
-
-Introduce Alembic so that database schema changes can be tracked and applied consistently.
-
----
-
-### Priority 4 — Deployment
-
-Once authentication and testing are stable:
-
-```text
-Docker
-  ↓
-Backend deployment
-  +
-Frontend deployment
-  ↓
-Environment configuration
-  ↓
-GitHub Actions / CI
-```
-
----
-
-### Priority 5 — Vendor Reviews
-
-Complete the existing Vendor Reviews placeholder by adding:
-
-* Review/rating database table
-* Backend endpoints
-* Vendor-side display
-* Organizer/vendor review workflow
-
----
-
-## Current Position
-
-**Core functionality:** ✅ Implemented
-
-**Frontend:** ✅ Implemented
-
-**Backend:** ✅ Implemented
-
-**Database:** ✅ Implemented
-
-**Intelligence modules:** ✅ Implemented
-
-**Authentication:** ❌ Pending
-
-**Testing:** ❌ Pending
-
-**Deployment:** ❌ Pending
-
-**Database migrations:** ❌ Pending
-
-The project is feature-complete for its current development scope, with the remaining work mainly focused on authentication, testing, deployment, and production-readiness.
+1. **Finish the command-center visual pass** — apply the stat-module/donut-chart/quick-actions treatment to the remaining ~10 pages for full visual consistency
+2. **Auto-link Users to Attendee/Vendor records** — remove the manual "viewing as" step for logged-in Attendees/Vendors
+3. **Testing pass** — systematic manual or automated testing across all modules
+4. **Deployment** — Dockerize backend + frontend, deploy (Render/Railway + Vercel/Netlify), set up GitHub Actions
