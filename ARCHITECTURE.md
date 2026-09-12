@@ -1,448 +1,181 @@
 # EventSphere — Architecture
 
-## 1. System Overview
+## System Overview
 
-EventSphere follows a simple three-layer architecture:
-
-```text
-┌──────────────────────────────────────────────────────────────┐
-│                         FRONTEND                             │
-│                                                              │
-│  React 19 + TypeScript + Vite                               │
-│  React Router · TanStack Query · Axios                      │
-│                                                              │
-│  Landing · Authentication UI · Organizer Dashboard           │
-│  Attendee Portal · Vendor Portal                             │
-└──────────────────────────────┬───────────────────────────────┘
-                               │
-                         HTTP / JSON
-                               │
-                               ▼
-┌──────────────────────────────────────────────────────────────┐
-│                         BACKEND                              │
-│                                                              │
-│  FastAPI + SQLAlchemy + Pydantic                            │
-│                                                              │
-│  Event · Venue · Resource · Booking · Allocation             │
-│  Attendee · Ticket · Vendor · Expenses · Analytics           │
-│  Risk · Forecasting · Recommendations · Reports              │
-│  Notifications · Incidents · Simulator · and more            │
-└──────────────────────────────┬───────────────────────────────┘
-                               │
-                         SQLAlchemy ORM
-                               │
-                               ▼
-┌──────────────────────────────────────────────────────────────┐
-│                         DATABASE                             │
-│                                                              │
-│                         PostgreSQL                           │
-│                                                              │
-│  Relational tables connected through foreign keys            │
-└──────────────────────────────────────────────────────────────┘
 ```
-
-The frontend is responsible for the user interface and client-side state/cache. The FastAPI backend provides the application API and business logic, while PostgreSQL stores the persistent event data.
-
----
-
-## 2. Frontend
-
-The frontend is a single React application using client-side routing.
-
-### Main areas
-
-```text
-/
-├── Landing
-├── Authentication UI
-│   ├── Login
-│   ├── Signup
-│   └── Forgot Password
-│
-├── Organizer
-│   └── Dashboard
-│
-├── Attendee
-│   └── Attendee Portal
-│
-└── Vendor
-    └── Vendor Portal
-```
-
-### Frontend stack
-
-* React 19
-* TypeScript
-* Vite
-* React Router
-* TanStack Query
-* Axios
-* Tailwind CSS v4
-* Recharts
-* Framer Motion
-* Three.js
-* Lucide React
-
----
-
-## 3. Backend
-
-The backend is built using FastAPI.
-
-`main.py` registers the application routers, with each router representing a functional area of EventSphere.
-
-Current domains include:
-
-```text
-event
-venue
-resource
-booking
-allocation
-attendee
-ticket
-vendor
-vendor_assignment
-expense
-health_score
-risk
-feedback
-certificate
-recommendations
-notification
-venue_map
-lost_found
-simulator
-incident
-sponsor
-approval
-forecast
-report_export
-```
-
-The backend currently contains around 25 routers.
-
-CORS is configured for the local frontend:
-
-```text
-http://localhost:5173
+┌───────────────────────────────────────────────────────────┐
+│                          BROWSER                            │
+│                                                               │
+│   /            Landing (public, dark theme, 3D hero,          │
+│                 glow cursor, pill navbar)                     │
+│   /login /signup /forgot-password    Auth UI (real JWT auth)  │
+│   /dashboard    Organizer Dashboard — PROTECTED (role:         │
+│                 Organizer) — command-center sidebar            │
+│   /attendee     Attendee Portal — PROTECTED (role: Attendee)   │
+│   /vendor       Vendor Portal — PROTECTED (role: Vendor)        │
+│                                                               │
+│   Single React app (Vite) · client-side routed via             │
+│   react-router-dom · state/cache via TanStack Query ·           │
+│   auth state via AuthContext (JWT in localStorage)              │
+└─────────────────────────┬─────────────────────────────────┘
+                           │  Axios · HTTP/JSON (Bearer token on /auth/me)
+                           ▼
+┌───────────────────────────────────────────────────────────┐
+│                       FASTAPI BACKEND                        │
+│                                                               │
+│  main.py registers ~26 routers, one per domain:                │
+│  event · venue · resource · booking · allocation ·             │
+│  attendee · ticket · vendor · vendor_assignment ·                │
+│  expense · health_score · risk · feedback · certificate ·         │
+│  recommendations · notification · venue_map · lost_found ·        │
+│  simulator · incident · sponsor · approval · forecast ·           │
+│  report_export · auth (JWT register/login/me)                     │
+│                                                               │
+│  CORS: allow-origin http://localhost:5173                     │
+└─────────────────────────┬─────────────────────────────────┘
+                           │  SQLAlchemy ORM
+                           ▼
+┌───────────────────────────────────────────────────────────┐
+│                    PostgreSQL DATABASE                        │
+│           ~21 tables, foreign-key linked                       │
+└───────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 4. Backend Feature Pattern
+## Backend Pattern
 
-Backend features generally follow the same three-part structure:
+Every feature is exactly 3 files, following the same shape:
 
-```text
-models/<name>.py
-        │
-        │  SQLAlchemy table definition
-        ▼
-schemas/<name>.py
-        │
-        │  Pydantic request / response models
-        ▼
-routers/<name>.py
-        │
-        │  FastAPI endpoints and feature logic
-        ▼
-     Database
+```
+models/<name>.py     → SQLAlchemy table definition
+schemas/<name>.py    → Pydantic request/response models
+routers/<name>.py    → FastAPI endpoints (CRUD + any custom logic)
 ```
 
-Example:
-
-```text
-models/booking.py
-schemas/booking.py
-routers/booking.py
-```
-
-A router is registered in `main.py`:
-
+Registered in `main.py`:
 ```python
 app.include_router(<name>.router)
 ```
 
-Database tables are currently created when the application starts:
+Tables are auto-created on startup via `Base.metadata.create_all(bind=engine)`. No migration tool (Alembic) is wired in yet — schema changes require a fresh table or manual ALTER.
 
-```python
-Base.metadata.create_all(bind=engine)
-```
-
-There is currently **no Alembic migration setup**. As a result, schema changes may require manual database changes or recreating the affected tables.
-
----
-
-## 5. Frontend Feature Pattern
-
-Frontend modules generally contain four parts:
-
-```text
-types/<name>.ts
-        │
-        │  TypeScript interfaces
-        ▼
-services/<name>Service.ts
-        │
-        │  Axios API calls
-        ▼
-pages/<Name>/
-├── <Name>Form.tsx
-└── <Name>List.tsx
-```
-
-Not every feature requires both a form and list page.
-
-### Routing
-
-Organizer-facing modules are connected through:
-
-```text
-components/layout/Sidebar.tsx
-        ↓
-pages/Dashboard/DashboardApp.tsx
-```
-
-Standalone areas such as the landing page, authentication screens, attendee portal, and vendor portal are connected through the route tree in:
-
-```text
-App.tsx
-```
-
-### State and caching
-
-TanStack Query handles server state and caching.
-
-After a successful mutation, the relevant query is invalidated:
-
-```text
-Mutation
-   ↓
-Backend update
-   ↓
-queryClient.invalidateQueries()
-   ↓
-Fresh data requested
-   ↓
-UI updates
-```
-
-This avoids maintaining a second manual copy of database state in the frontend.
+**Authentication** (`auth.py`) is the one router that departs from pure CRUD:
+- `POST /auth/register` — hashes password (bcrypt via passlib), creates a `User` row with a role (Organizer/Attendee/Vendor), returns a JWT
+- `POST /auth/login` — verifies password, returns a JWT
+- `GET /auth/me` — reads the `Authorization: Bearer <token>` header, decodes the JWT, returns the current user
+- Tokens are signed with `JWT_SECRET_KEY` (from `.env`), 7-day expiry, HS256 algorithm
 
 ---
 
-## 6. Frontend Folder Map
+## Frontend Pattern
 
-```text
+Every feature module is 4 pieces, following the same shape:
+
+```
+types/<name>.ts             → TypeScript interfaces (mirrors Pydantic schemas)
+services/<name>Service.ts   → Axios calls to the matching backend router
+pages/<Name>/<Name>Page.tsx → Full page: stat modules + form + list + search/filter + quick actions
+```
+
+Newer "command-center" pages (Events, Venues, Resources, Attendees, Vendors, Assignments, Bookings, Allocations, Budget, Sponsorship, Approvals, Analytics, Health Score, Risks) follow a consistent internal layout:
+1. Page heading + one-line description
+2. Row of `StatModule` cards (colored icon badge + big number, computed from real data)
+3. A 3-column grid: form panel / searchable+filterable list panel / donut-chart breakdown panel
+4. A "Quick Actions" panel linking to related pages (via an `onNavigate` prop passed down from `DashboardApp.tsx`)
+
+State/caching: TanStack Query throughout. Mutations call `queryClient.invalidateQueries()` on success to keep the UI in sync with the database.
+
+**Auth state**: `AuthContext` holds `{ user, token }`, persisted to `localStorage` (`es_token`, `es_user`). `ProtectedRoute` wraps `/dashboard`, `/attendee`, `/vendor` and redirects to `/login` if unauthenticated, or to `/` if the logged-in user's role doesn't match the route.
+
+---
+
+## Frontend Folder Map
+
+```
 frontend/src/
-│
-├── App.tsx
-│   └── Top-level route configuration
-│
-├── index.css
-│   └── Global styles and design tokens
-│
+├── App.tsx                    Router — AuthProvider > AttendeeProvider > VendorProvider > Routes
+├── index.css                   Design tokens: dark theme (teal/emerald accent) + global overrides
 ├── components/
-│   ├── layout/
-│   │   └── Sidebar.tsx
-│   │
-│   ├── Reveal.tsx
-│   ├── AnimatedCounter.tsx
-│   ├── TiltCard.tsx
-│   ├── Hero3D.tsx
-│   └── GradientButton.tsx
-│
+│   ├── layout/Sidebar.tsx        Organizer dashboard nav (grouped: Command Center, Events,
+│   │                              Operations, People, Finance, Intelligence, Post-Event, Other)
+│   ├── layout/TopHeader.tsx       Search, notification bell, profile dropdown with logout
+│   ├── Reveal.tsx                 Scroll-triggered fade/slide-in wrapper (3D rotation on entry)
+│   ├── AnimatedCounter.tsx        Count-up-on-view number
+│   ├── TiltCard.tsx               Mouse-tracking 3D tilt + glossy shine-sweep wrapper
+│   ├── Hero3D.tsx                 Three.js animated wireframe/particle hero scene
+│   ├── GradientButton.tsx         Animated gradient-glow CTA button
+│   ├── GlowCursor.tsx             WebGL (ogl) glowing mouse-trail effect
+│   ├── GlobalCursorGlow.tsx        Renders GlowCursor only on Landing/Auth routes
+│   ├── PillNav.tsx                 Pill-shaped floating navbar with GSAP hover-fill animation
+│   ├── GlobalNav.tsx                Renders PillNav only on Landing/Auth routes
+│   └── ProtectedRoute.tsx           Route guard: requires login + matching role
 ├── context/
-│   ├── AttendeeContext.tsx
-│   └── VendorContext.tsx
-│
+│   ├── AuthContext.tsx             Logged-in user + JWT, persisted to localStorage
+│   ├── AttendeeContext.tsx          "Viewing as" attendee identity (within Attendee Portal)
+│   └── VendorContext.tsx            "Viewing as" vendor identity (within Vendor Portal)
 ├── pages/
-│   ├── Landing/
-│   ├── Auth/
-│   ├── Dashboard/
-│   ├── AttendeePortal/
-│   ├── VendorPortal/
-│   └── <Feature>/
-│
-├── services/
-│   └── One Axios service per feature
-│
-└── types/
-    └── One TypeScript interface file per feature
-```
-
-### Component notes
-
-| Component             | Purpose                            |
-| --------------------- | ---------------------------------- |
-| `Sidebar.tsx`         | Organizer dashboard navigation     |
-| `Reveal.tsx`          | Scroll-triggered animation wrapper |
-| `AnimatedCounter.tsx` | Count-up statistics                |
-| `TiltCard.tsx`        | Mouse-based 3D card effect         |
-| `Hero3D.tsx`          | Three.js landing-page scene        |
-| `GradientButton.tsx`  | Reusable animated CTA              |
-
----
-
-## 7. Data Flow Example — Venue Booking
-
-A typical booking request follows this flow:
-
-```text
-User
- │
- │ fills out BookingForm.tsx
- ▼
-bookingService.createBooking()
- │
- │ POST /bookings/
- ▼
-routers/booking.py
- │
- │ checks existing bookings
- │
- │ overlap condition:
- │ start < existing_end
- │ AND
- │ end > existing_start
- │
- ├─────────────── Conflict ────────────────┐
- │                                         │
- │  HTTP 409                               │
- │  explanatory message                    │
- │                                         ▼
- │                                  BookingForm.tsx
- │
- └──────────── No Conflict ────────────────┐
-                                           │
-                                           ▼
-                                    INSERT booking
-                                           │
-                                           ▼
-                                      HTTP 200
-                                           │
-                                           ▼
-                             queryClient.invalidateQueries()
-                                           │
-                                           ▼
-                                  BookingList.tsx
-                                           │
-                                           ▼
-                                      Updated UI
-```
-
-The API follows a consistent status-code approach across the application, including:
-
-```text
-200  Success
-201  Created
-400  Bad Request
-404  Not Found
-409  Conflict
-500  Server Error
+│   ├── Landing/                     Public marketing page (own CSS, dark theme, 3D hero)
+│   ├── Auth/                        AuthScreen.tsx (shared login/signup split-panel UI),
+│   │                                 Login.tsx, Signup.tsx, ForgotPassword.tsx
+│   ├── Dashboard/DashboardApp.tsx    Organizer sidebar shell + all ~25 module routes
+│   ├── Overview/Overview.tsx         Command-center home: featured event, readiness ring,
+│   │                                  stat modules, events/venue-pulse/budget panels
+│   ├── AttendeePortal/               Attendee-facing routed pages
+│   ├── VendorPortal/                 Vendor-facing routed pages
+│   └── <Feature>/                    One folder per feature module (Events, Budget, Risks, …)
+├── services/                        One Axios file per feature, including authService.ts
+└── types/                           One TS interface file per feature
 ```
 
 ---
 
-## 8. Database
+## Data Flow Example — Logging In
 
-PostgreSQL is used as the primary database.
-
-Current tables include:
-
-```text
-events
-venues
-resources
-bookings
-allocations
-attendees
-tickets
-vendors
-vendor_assignments
-expenses
-sponsors
-approval_requests
-feedback
-certificates
-notifications
-venue_map_points
-lost_found_items
-incidents
+```
+User submits AuthScreen login form
+        ↓
+authService.loginUser() → POST /auth/login { email, password }
+        ↓
+routers/auth.py: look up User by email, verify bcrypt hash
+        ↓
+  ├─ Invalid  → 401 → shown inline in the form
+  └─ Valid    → sign JWT { sub: user.id, role: user.role } → return { access_token, user }
+        ↓
+AuthContext.login(token, user) → saved to state + localStorage
+        ↓
+navigate() to role-based landing route (/dashboard, /attendee, or /vendor)
+        ↓
+ProtectedRoute on that route checks user.role matches → renders the portal
 ```
 
-The tables are connected using foreign-key relationships where required.
+## Data Flow Example — Booking a Venue (unchanged core pattern)
+
+```
+User fills BookingForm.tsx
+        ↓
+bookingService.createBooking() → POST /bookings/
+        ↓
+routers/booking.py: overlap check against existing bookings
+  for that venue_id (start < end AND end > start)
+        ↓
+  ├─ Conflict found  → 409 + explanatory message → shown in form
+  └─ No conflict     → INSERT into bookings table → 200 + booking
+        ↓
+queryClient invalidates ["bookings"] → BookingsPage re-fetches
+        ↓
+UI updates automatically
+```
+
+This request/response/status-code shape (200/201/400/401/404/409/500) is consistent across all routers.
 
 ---
 
-## 9. Cross-Cutting Design Decisions
+## Cross-Cutting Design Decisions
 
-### Read-only intelligence
-
-The What-If Simulator and recommendation endpoints are designed as read-only operations.
-
-They calculate results from current database data without modifying the underlying records.
-
-```text
-Database
-   ↓
-GET request
-   ↓
-Calculation / recommendation
-   ↓
-Response
-```
-
-### Database-driven analytics
-
-Analytics, scores, forecasts, and risk results are calculated from database records rather than being hardcoded.
-
-This applies to:
-
-* Analytics Dashboard
-* Event Health Score
-* Risk Detection
-* Forecasting
-* Recommendations
-
-### Identity switching
-
-The Attendee and Vendor portals currently use client-side identity selection instead of real authentication.
-
-```text
-AttendeeContext
-      ↓
-"Viewing as" attendee
-
-VendorContext
-      ↓
-"Viewing as" vendor
-```
-
-There is currently no JWT/session-based authentication layer.
-
-This is documented as a known limitation in [`PROJECT_STATE.md`](./PROJECT_STATE.md).
-
-### Landing page isolation
-
-The landing page has its own styling through `Landing.css` and scoped dark-theme variables.
-
-The dashboard uses the global theme defined through `index.css`.
-
-This keeps the landing page's dark marketing design from affecting the dashboard styling.
-
----
-
-## 10. Current Architecture Limitations
-
-The current architecture is suitable for the project's development stage, but several production-level pieces are still missing:
-
-* Real authentication and role-based access control
-* Automated tests
-* Database migration management with Alembic
-* Production deployment
-* CI/CD pipeline
-* Production environment configuration
-
-These are tracked in [`PROJECT_STATE.md`](./PROJECT_STATE.md).
+- **Read-only intelligence endpoints**: What-If Simulator and all recommendation endpoints are GET-only and never write to the database, by design.
+- **No hardcoded analytics**: every stat, chart, score, and forecast is computed from real database rows at request time.
+- **RBAC via JWT, not sessions**: stateless — the backend never stores session data; every protected request carries the token and the backend decodes it fresh.
+- **Attendee/Vendor identity vs. login identity**: a logged-in Attendee/Vendor user still uses an in-portal "viewing as" selector (`AttendeeContext`/`VendorContext`) to pick which `attendees`/`vendors` database row they're acting as, since there is not yet a direct foreign-key link between the `users` table and those tables. This is a known simplification (see `PROJECT_STATE.md`).
+- **Landing page isolation**: `Landing.css` + its own dark CSS variables are scoped so the marketing page's styling doesn't interfere with the dashboard's separately-themed dark mode (`index.css`).
+- **3D/motion layering**: `TiltCard` (mouse-tracking rotation + shine), `Reveal` (scroll-entry animation with rotation), and `Hero3D` (persistent Three.js scene) are composed together on the landing page but used selectively — dashboard pages use only `TiltCard` on stat cards, not the heavier `Hero3D`/`GlowCursor` effects, to keep dense data screens readable.
