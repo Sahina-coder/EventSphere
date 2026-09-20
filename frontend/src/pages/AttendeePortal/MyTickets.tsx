@@ -2,16 +2,19 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Ticket as TicketIcon } from "lucide-react";
 import { getEvents } from "../../services/eventService";
+import { getAttendees } from "../../services/attendeeService";
 import { getTickets, getTicketQrUrl } from "../../services/ticketService";
-import { useAttendeeContext } from "../../context/AttendeeContext";
+import { useAuth } from "../../context/AuthContext";
 
 const MyTickets = () => {
-  const { attendeeId } = useAttendeeContext();
+  const { user } = useAuth();
   const [qrTicketId, setQrTicketId] = useState<number | null>(null);
   const { data: tickets } = useQuery({ queryKey: ["tickets"], queryFn: getTickets });
   const { data: events } = useQuery({ queryKey: ["events"], queryFn: getEvents });
+  const { data: attendees } = useQuery({ queryKey: ["attendees"], queryFn: getAttendees });
 
-  const myTickets = tickets?.filter((t) => t.attendee_id === attendeeId) ?? [];
+  const myAttendeeIds = new Set(attendees?.filter((a) => a.email === user?.email).map((a) => a.id));
+  const myTickets = tickets?.filter((t) => myAttendeeIds.has(t.attendee_id)) ?? [];
   const getEventName = (id: number) => events?.find((e) => e.id === id)?.name ?? `Event #${id}`;
 
   return (
@@ -23,9 +26,7 @@ const MyTickets = () => {
         <p className="text-sm text-[var(--text-muted)] mt-1">Your digital tickets and QR codes.</p>
       </div>
 
-      {!attendeeId ? (
-        <p className="text-sm text-[var(--text-muted)]">Select an attendee identity from the sidebar.</p>
-      ) : myTickets.length === 0 ? (
+      {myTickets.length === 0 ? (
         <p className="text-sm text-[var(--text-muted)]">No tickets yet — register for an event to get one.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

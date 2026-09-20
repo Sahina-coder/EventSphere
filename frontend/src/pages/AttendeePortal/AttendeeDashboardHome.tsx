@@ -3,7 +3,7 @@ import { CalendarRange, Ticket, Sparkles, Compass } from "lucide-react";
 import { getEvents } from "../../services/eventService";
 import { getAttendees } from "../../services/attendeeService";
 import { getTickets } from "../../services/ticketService";
-import { useAttendeeContext } from "../../context/AttendeeContext";
+import { useAuth } from "../../context/AuthContext";
 
 const StatModule = ({
   label, value, icon: Icon, badgeColor,
@@ -20,31 +20,23 @@ const StatModule = ({
 );
 
 const AttendeeDashboardHome = () => {
-  const { attendeeId } = useAttendeeContext();
+  const { user } = useAuth();
   const { data: events } = useQuery({ queryKey: ["events"], queryFn: getEvents });
   const { data: attendees } = useQuery({ queryKey: ["attendees"], queryFn: getAttendees });
   const { data: tickets } = useQuery({ queryKey: ["tickets"], queryFn: getTickets });
 
-  const me = attendees?.find((a) => a.id === attendeeId);
-  const myRegistrations = attendees?.filter((a) => a.id === attendeeId) ?? [];
+  const myRegistrations = attendees?.filter((a) => a.email === user?.email) ?? [];
   const myEventIds = new Set(myRegistrations.map((r) => r.event_id));
+  const myAttendeeIds = new Set(myRegistrations.map((r) => r.id));
   const myEvents = events?.filter((e) => myEventIds.has(e.id)) ?? [];
   const upcoming = myEvents.filter((e) => new Date(e.date) > new Date());
-  const myTickets = tickets?.filter((t) => t.attendee_id === attendeeId) ?? [];
+  const myTickets = tickets?.filter((t) => myAttendeeIds.has(t.attendee_id)) ?? [];
   const recommended = events?.filter((e) => !myEventIds.has(e.id)).slice(0, 3) ?? [];
-
-  if (!attendeeId) {
-    return (
-      <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-8 text-center">
-        <p className="text-sm text-[var(--text-muted)]">Select an attendee from the sidebar to view your dashboard.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold text-[var(--text)]">Welcome back, {me?.name} 👋</h1>
+        <h1 className="font-display text-2xl font-bold text-[var(--text)]">Welcome back, {user?.name} 👋</h1>
         <p className="text-sm text-[var(--text-muted)] mt-1">Here's what's happening with your events.</p>
       </div>
 

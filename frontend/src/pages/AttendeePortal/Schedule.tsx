@@ -2,14 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { CalendarDays } from "lucide-react";
 import { getEvents } from "../../services/eventService";
 import { getAttendees } from "../../services/attendeeService";
-import { useAttendeeContext } from "../../context/AttendeeContext";
+import { useAuth } from "../../context/AuthContext";
 
 const Schedule = () => {
-  const { attendeeId } = useAttendeeContext();
+  const { user } = useAuth();
   const { data: events } = useQuery({ queryKey: ["events"], queryFn: getEvents });
   const { data: attendees } = useQuery({ queryKey: ["attendees"], queryFn: getAttendees });
 
-  const myEventIds = new Set(attendees?.filter((a) => a.id === attendeeId).map((a) => a.event_id));
+  const myEventIds = new Set(attendees?.filter((a) => a.email === user?.email).map((a) => a.event_id));
   const myEvents = (events?.filter((e) => myEventIds.has(e.id)) ?? []).sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
@@ -23,9 +23,7 @@ const Schedule = () => {
         <p className="text-sm text-[var(--text-muted)] mt-1">Timeline of your registered events.</p>
       </div>
 
-      {!attendeeId ? (
-        <p className="text-sm text-[var(--text-muted)]">Select an attendee identity from the sidebar.</p>
-      ) : myEvents.length === 0 ? (
+      {myEvents.length === 0 ? (
         <p className="text-sm text-[var(--text-muted)]">No events on your schedule yet.</p>
       ) : (
         <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6">
