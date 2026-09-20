@@ -19,6 +19,13 @@ def create_vendor(vendor: VendorCreate, db: Session = Depends(get_db)):
 def get_vendors(db: Session = Depends(get_db)):
     return db.query(Vendor).all()
 
+@router.get("/by-email/{email}", response_model=VendorResponse)
+def get_vendor_by_email(email: str, db: Session = Depends(get_db)):
+    vendor = db.query(Vendor).filter(Vendor.email == email).first()
+    if not vendor:
+        raise HTTPException(status_code=404, detail="No vendor record found for this email")
+    return vendor
+
 @router.get("/{vendor_id}", response_model=VendorResponse)
 def get_vendor(vendor_id: int, db: Session = Depends(get_db)):
     vendor = db.query(Vendor).filter(Vendor.id == vendor_id).first()
