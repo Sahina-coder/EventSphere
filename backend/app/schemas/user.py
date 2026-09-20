@@ -1,11 +1,13 @@
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
+from typing import Optional
 
 class UserCreate(BaseModel):
     name: str
     email: EmailStr
     password: str
     role: str
+    phone: Optional[str] = None
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -16,6 +18,7 @@ class UserResponse(BaseModel):
     name: str
     email: str
     role: str
+    phone: Optional[str] = None
     created_at: datetime
 
     class Config:
