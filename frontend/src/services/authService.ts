@@ -5,6 +5,7 @@ export interface User {
   name: string;
   email: string;
   role: string;
+  phone?: string;
   created_at: string;
 }
 
@@ -14,8 +15,14 @@ export interface AuthResponse {
   user: User;
 }
 
-export const registerUser = async (name: string, email: string, password: string, role: string): Promise<AuthResponse> => {
-  const res = await api.post("/auth/register", { name, email, password, role });
+export const registerUser = async (
+  name: string,
+  email: string,
+  password: string,
+  role: string,
+  phone?: string
+): Promise<AuthResponse> => {
+  const res = await api.post("/auth/register", { name, email, password, role, phone });
   return res.data;
 };
 

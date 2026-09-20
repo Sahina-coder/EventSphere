@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { User as UserIcon, Mail, Lock } from "lucide-react";
+import { User as UserIcon, Mail, Lock, Phone } from "lucide-react";
 import { loginUser, registerUser } from "../../services/authService";
 import { useAuth } from "../../context/AuthContext";
 import "./AuthScreen.css";
@@ -30,6 +30,7 @@ const AuthScreen = ({ initialMode }: AuthScreenProps) => {
   const [signupName, setSignupName] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
+  const [signupPhone, setSignupPhone] = useState("");
   const [signupRole, setSignupRole] = useState("Attendee");
   const [signupError, setSignupError] = useState("");
   const [signupLoading, setSignupLoading] = useState(false);
@@ -52,9 +53,15 @@ const AuthScreen = ({ initialMode }: AuthScreenProps) => {
   const handleSignupSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSignupError("");
+
+    if ((signupRole === "Attendee" || signupRole === "Vendor") && !/^\d{10}$/.test(signupPhone)) {
+      setSignupError("Please enter a valid 10-digit phone number.");
+      return;
+    }
+
     setSignupLoading(true);
     try {
-      const res = await registerUser(signupName, signupEmail, signupPassword, signupRole);
+      const res = await registerUser(signupName, signupEmail, signupPassword, signupRole, signupPhone || undefined);
       login(res.access_token, res.user);
       navigate(roleRedirect[res.user.role] ?? "/");
     } catch (err: any) {
@@ -126,6 +133,14 @@ const AuthScreen = ({ initialMode }: AuthScreenProps) => {
               <label>Email</label>
               <Mail size={15} />
             </div>
+
+            {(signupRole === "Attendee" || signupRole === "Vendor") && (
+              <div className="field-wrapper slide-element">
+                <input type="tel" placeholder=" " value={signupPhone} onChange={(e) => setSignupPhone(e.target.value)} required />
+                <label>Phone (10 digits)</label>
+                <Phone size={15} />
+              </div>
+            )}
 
             <div className="field-wrapper slide-element">
               <input type="password" placeholder=" " value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required minLength={6} />

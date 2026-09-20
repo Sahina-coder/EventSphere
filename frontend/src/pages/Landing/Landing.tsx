@@ -46,11 +46,12 @@ const testimonials = [
 ];
 
 const team = [
+  { name: "Chathurya", role: "Full-Stack Developer" },
+  { name: "Daksh", role: "Full-Stack Developer" },
+  { name: "Keerthiga", role: "Full-Stack Developer" },
+  { name: "Naveen", role: "Full-Stack Developer" },
   { name: "Sahina", role: "Full-Stack Developer" },
-  { name: "Team Member 2", role: "Backend Developer" },
-  { name: "Team Member 3", role: "Frontend Developer" },
-  { name: "Team Member 4", role: "Product Design" },
-  { name: "Team Member 5", role: "QA & Testing" },
+  { name: "Subikshan", role: "Full-Stack Developer" }
 ];
 
 const faqs = [
@@ -229,7 +230,7 @@ const Landing = () => {
               <span className="ld-eyebrow">Intelligence</span>
               <h2 className="ld-section-title text-white mb-4">Don't Just Manage Your Events. Understand Them.</h2>
               <p className="ld-muted">
-                EventSphere uses your event data to generate intelligent insights and decision-support recommendations — surfacing risks and opportunities before they become problems.
+                EventSphere uses your event data to generate intelligent insights and decision-support recommendations - surfacing risks and opportunities before they become problems.
               </p>
             </div>
           </Reveal>
