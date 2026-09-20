@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { Briefcase, ClipboardCheck, Star } from "lucide-react";
-import { getVendors } from "../../services/vendorService";
+import { getVendorByEmail } from "../../services/vendorService";
 import { getVendorAssignments } from "../../services/vendorAssignmentService";
 import { getEvents } from "../../services/eventService";
-import { useVendorContext } from "../../context/VendorContext";
+import { useAuth } from "../../context/AuthContext";
 
 const StatModule = ({
   label, value, icon: Icon, badgeColor,
@@ -20,22 +20,26 @@ const StatModule = ({
 );
 
 const VendorDashboardHome = () => {
-  const { vendorId } = useVendorContext();
-  const { data: vendors } = useQuery({ queryKey: ["vendors"], queryFn: getVendors });
+  const { user } = useAuth();
+  const { data: vendor } = useQuery({
+    queryKey: ["myVendorRecord", user?.email],
+    queryFn: () => getVendorByEmail(user!.email),
+    enabled: !!user?.email,
+    retry: false,
+  });
   const { data: assignments } = useQuery({ queryKey: ["vendorAssignments"], queryFn: getVendorAssignments });
   const { data: events } = useQuery({ queryKey: ["events"], queryFn: getEvents });
 
-  const me = vendors?.find((v) => v.id === vendorId);
-  const myAssignments = assignments?.filter((a) => a.vendor_id === vendorId) ?? [];
+  const myAssignments = assignments?.filter((a) => a.vendor_id === vendor?.id) ?? [];
   const confirmed = myAssignments.filter((a) => a.status === "Confirmed");
   const pending = myAssignments.filter((a) => a.status !== "Confirmed");
 
   const getEventName = (id: number) => events?.find((e) => e.id === id)?.name ?? `Event #${id}`;
 
-  if (!vendorId) {
+  if (!vendor) {
     return (
       <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-8 text-center">
-        <p className="text-sm text-[var(--text-muted)]">Select a vendor from the sidebar to view your dashboard.</p>
+        <p className="text-sm text-[var(--text-muted)]">Setting up your vendor profile…</p>
       </div>
     );
   }
@@ -43,14 +47,14 @@ const VendorDashboardHome = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold text-[var(--text)]">Welcome back, {me?.name}</h1>
+        <h1 className="font-display text-2xl font-bold text-[var(--text)]">Welcome back, {vendor.name}</h1>
         <p className="text-sm text-[var(--text-muted)] mt-1">Here's an overview of your event assignments.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatModule label="Total Assignments" value={String(myAssignments.length)} icon={Briefcase} badgeColor="rgba(45,212,191,0.15)" />
         <StatModule label="Confirmed Bookings" value={String(confirmed.length)} icon={ClipboardCheck} badgeColor="rgba(52,211,153,0.15)" />
-        <StatModule label="Availability" value={me?.availability ?? "—"} icon={Star} badgeColor="rgba(245,158,11,0.15)" />
+        <StatModule label="Availability" value={vendor.availability} icon={Star} badgeColor="rgba(245,158,11,0.15)" />
       </div>
 
       <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6">

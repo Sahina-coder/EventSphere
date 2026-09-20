@@ -1,6 +1,9 @@
+import { useEffect, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CalendarRange, Briefcase, ClipboardCheck, Wallet, Star, LogOut } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { createVendor, getVendorByEmail } from "../../services/vendorService";
 
 const navItems = [
   { to: "", label: "Dashboard", icon: CalendarRange, end: true },
@@ -13,6 +16,36 @@ const navItems = [
 const VendorLayout = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [setupDone, setSetupDone] = useState(false);
+
+  const { data: vendor, isError, isLoading } = useQuery({
+    queryKey: ["myVendorRecord", user?.email],
+    queryFn: () => getVendorByEmail(user!.email),
+    enabled: !!user?.email,
+    retry: false,
+  });
+
+  const createMutation = useMutation({
+    mutationFn: createVendor,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["myVendorRecord", user?.email] });
+      queryClient.invalidateQueries({ queryKey: ["vendors"] });
+      setSetupDone(true);
+    },
+  });
+
+  useEffect(() => {
+    if (!isLoading && isError && user && !setupDone && !createMutation.isPending) {
+      createMutation.mutate({
+        name: user.name,
+        service_type: "General",
+        phone: user.phone || "0000000000",
+        email: user.email,
+        availability: "Available",
+      });
+    }
+  }, [isLoading, isError, user, setupDone]);
 
   const handleLogout = () => {
     logout();
@@ -33,6 +66,7 @@ const VendorLayout = () => {
         <div className="px-4 py-4 border-b border-[var(--border)]">
           <p className="text-sm font-medium text-[var(--text)]">{user?.name}</p>
           <p className="text-xs text-[var(--text-muted)]">{user?.email}</p>
+          {vendor && <p className="text-[10px] text-[var(--accent)] mt-1">{vendor.service_type} · {vendor.availability}</p>}
         </div>
 
         <nav className="px-3 py-4 space-y-0.5 flex-1">

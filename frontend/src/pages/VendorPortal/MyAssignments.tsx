@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { ClipboardList } from "lucide-react";
 import { getVendorAssignments } from "../../services/vendorAssignmentService";
 import { getEvents } from "../../services/eventService";
-import { useVendorContext } from "../../context/VendorContext";
+import { getVendorByEmail } from "../../services/vendorService";
+import { useAuth } from "../../context/AuthContext";
 
 const statusColor: Record<string, string> = {
   Assigned: "#2dd4bf",
@@ -12,11 +13,17 @@ const statusColor: Record<string, string> = {
 };
 
 const MyAssignments = () => {
-  const { vendorId } = useVendorContext();
+  const { user } = useAuth();
+  const { data: vendor } = useQuery({
+    queryKey: ["myVendorRecord", user?.email],
+    queryFn: () => getVendorByEmail(user!.email),
+    enabled: !!user?.email,
+    retry: false,
+  });
   const { data: assignments } = useQuery({ queryKey: ["vendorAssignments"], queryFn: getVendorAssignments });
   const { data: events } = useQuery({ queryKey: ["events"], queryFn: getEvents });
 
-  const myAssignments = assignments?.filter((a) => a.vendor_id === vendorId) ?? [];
+  const myAssignments = assignments?.filter((a) => a.vendor_id === vendor?.id) ?? [];
   const getEventName = (id: number) => events?.find((e) => e.id === id)?.name ?? `Event #${id}`;
 
   return (
@@ -28,9 +35,7 @@ const MyAssignments = () => {
         <p className="text-sm text-[var(--text-muted)] mt-1">Track the status of your event bookings.</p>
       </div>
 
-      {!vendorId ? (
-        <p className="text-sm text-[var(--text-muted)]">Select a vendor identity from the sidebar.</p>
-      ) : myAssignments.length === 0 ? (
+      {myAssignments.length === 0 ? (
         <p className="text-sm text-[var(--text-muted)]">No assignments yet.</p>
       ) : (
         <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6">

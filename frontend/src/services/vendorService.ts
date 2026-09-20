@@ -6,6 +6,11 @@ export const getVendors = async (): Promise<Vendor[]> => {
   return res.data;
 };
 
+export const getVendorByEmail = async (email: string): Promise<Vendor> => {
+  const res = await api.get(`/vendors/by-email/${encodeURIComponent(email)}`);
+  return res.data;
+};
+
 export const createVendor = async (data: VendorCreate): Promise<Vendor> => {
   const res = await api.post("/vendors/", data);
   return res.data;

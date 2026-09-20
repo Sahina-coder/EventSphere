@@ -3,17 +3,24 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Search, Briefcase } from "lucide-react";
 import { getEvents } from "../../services/eventService";
 import { getVendorAssignments, assignVendor } from "../../services/vendorAssignmentService";
-import { useVendorContext } from "../../context/VendorContext";
+import { getVendorByEmail } from "../../services/vendorService";
+import { useAuth } from "../../context/AuthContext";
 
 const Opportunities = () => {
   const queryClient = useQueryClient();
-  const { vendorId } = useVendorContext();
+  const { user } = useAuth();
   const [search, setSearch] = useState("");
 
+  const { data: vendor } = useQuery({
+    queryKey: ["myVendorRecord", user?.email],
+    queryFn: () => getVendorByEmail(user!.email),
+    enabled: !!user?.email,
+    retry: false,
+  });
   const { data: events } = useQuery({ queryKey: ["events"], queryFn: getEvents });
   const { data: assignments } = useQuery({ queryKey: ["vendorAssignments"], queryFn: getVendorAssignments });
 
-  const myEventIds = new Set(assignments?.filter((a) => a.vendor_id === vendorId).map((a) => a.event_id));
+  const myEventIds = new Set(assignments?.filter((a) => a.vendor_id === vendor?.id).map((a) => a.event_id));
   const openEvents = events?.filter((e) => !myEventIds.has(e.id) && e.name.toLowerCase().includes(search.toLowerCase())) ?? [];
 
   const mutation = useMutation({
@@ -22,8 +29,8 @@ const Opportunities = () => {
   });
 
   const handleApply = (eventId: number) => {
-    if (!vendorId) return;
-    mutation.mutate({ event_id: eventId, vendor_id: vendorId, service: "General Service", status: "Pending" });
+    if (!vendor) return;
+    mutation.mutate({ event_id: eventId, vendor_id: vendor.id, service: "General Service", status: "Pending" });
   };
 
   return (
@@ -34,12 +41,6 @@ const Opportunities = () => {
         </h1>
         <p className="text-sm text-[var(--text-muted)] mt-1">Events you could apply to provide services for.</p>
       </div>
-
-      {!vendorId && (
-        <div className="bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm rounded-lg px-4 py-3">
-          Select a vendor identity from the sidebar to apply.
-        </div>
-      )}
 
       <div className="relative max-w-sm">
         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
@@ -60,7 +61,7 @@ const Opportunities = () => {
             {e.budget != null && <p className="text-xs text-[var(--text-muted)] mt-1">Budget: ₹{e.budget.toLocaleString()}</p>}
             <button
               onClick={() => handleApply(e.id)}
-              disabled={!vendorId || mutation.isPending}
+              disabled={!vendor || mutation.isPending}
               className="mt-4 w-full bg-[var(--accent)] text-[#0a0f0e] text-sm font-medium rounded-lg px-4 py-2 hover:brightness-110 transition disabled:opacity-50"
             >
               Apply
