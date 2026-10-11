@@ -74,6 +74,6 @@ npm run dev
 
 ---
 
-## License / Credits
+## Credits
 
-Built by Team EventSphere as a full-stack event management project.
+Built by Sahina as a full-stack event management project.
