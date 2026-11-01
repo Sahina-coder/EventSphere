@@ -5,13 +5,18 @@ from app.models.certificate import Certificate
 from app.models.attendee import Attendee
 from app.models.event import Event
 from app.schemas.certificate import CertificateResponse, CertificateVerifyResponse
+from app.auth_utils import get_current_user, require_role
 from typing import List
 import datetime
 
 router = APIRouter(prefix="/certificates", tags=["Certificates"])
 
 @router.post("/generate/{attendee_id}", response_model=CertificateResponse)
-def generate_certificate(attendee_id: int, db: Session = Depends(get_db)):
+def generate_certificate(
+    attendee_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
+):
     attendee = db.query(Attendee).filter(Attendee.id == attendee_id).first()
     if not attendee:
         raise HTTPException(status_code=404, detail="Attendee not found")
@@ -41,11 +46,18 @@ def generate_certificate(attendee_id: int, db: Session = Depends(get_db)):
     return new_cert
 
 @router.get("/", response_model=List[CertificateResponse])
-def get_certificates(db: Session = Depends(get_db)):
+def get_certificates(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
     return db.query(Certificate).all()
 
 @router.get("/verify/{certificate_code}", response_model=CertificateVerifyResponse)
-def verify_certificate(certificate_code: str, db: Session = Depends(get_db)):
+def verify_certificate(
+    certificate_code: str,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
     cert = db.query(Certificate).filter(Certificate.certificate_code == certificate_code).first()
     if not cert:
         return CertificateVerifyResponse(valid=False, message="Certificate not found / Invalid certificate.")
