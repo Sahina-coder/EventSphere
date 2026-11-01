@@ -4,13 +4,17 @@ from sqlalchemy import and_
 from app.database import get_db
 from app.models.booking import Booking
 from app.schemas.booking import BookingCreate, BookingResponse
+from app.auth_utils import get_current_user, require_role
 from typing import List
 
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
 
 @router.post("/", response_model=BookingResponse)
-def create_booking(booking: BookingCreate, db: Session = Depends(get_db)):
-    # Conflict check: same venue, overlapping time range
+def create_booking(
+    booking: BookingCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),  # PROTECTED
+):
     conflict = db.query(Booking).filter(
         Booking.venue_id == booking.venue_id,
         and_(
@@ -32,11 +36,18 @@ def create_booking(booking: BookingCreate, db: Session = Depends(get_db)):
     return new_booking
 
 @router.get("/", response_model=List[BookingResponse])
-def get_bookings(db: Session = Depends(get_db)):
+def get_bookings(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),  # any logged-in user
+):
     return db.query(Booking).all()
 
 @router.delete("/{booking_id}")
-def delete_booking(booking_id: int, db: Session = Depends(get_db)):
+def delete_booking(
+    booking_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),  # PROTECTED
+):
     booking = db.query(Booking).filter(Booking.id == booking_id).first()
     if not booking:
         raise HTTPException(status_code=404, detail="Booking not found")
