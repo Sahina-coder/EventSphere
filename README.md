@@ -1,124 +1,208 @@
 # ✦ EventSphere
+
 <p align="center">
-  <img
-    src="./assets/eventsphere-banner.png"
-    alt="EventSphere 3D Hero Banner"
-    width="100%"
-  />
+  <img src="assets/eventsphere-banner.png" alt="EventSphere 3D Banner" width="100%" />
 </p>
+
 <p align="center">
   <strong>Intelligent Event Planning, Resource Management & Decision Support System</strong>
 </p>
 
 <p align="center">
-  A centralized platform to plan, manage, and analyze events — replacing scattered spreadsheets, WhatsApp messages, and manual coordination with one connected system.
+  A centralized platform to plan, manage, coordinate, and analyse events — all in one place.
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black" alt="React 19" />
-  <img src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white" alt="FastAPI" />
-  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white" />
+  <img src="https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white" />
+  <img src="https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white" />
+  <img src="https://img.shields.io/badge/License-MIT-green.svg" />
 </p>
 
 ---
 
-## ◈ Overview
+## 📌 About the Project
 
-EventSphere manages the event lifecycle through dedicated portals and centralized resource management.
+EventSphere is a full-stack **Event Planning and Resource Management System** designed to simplify the process of organising and managing events.
 
-- **Event Management** — Organize and manage event details.
-- **Resource & Venue Management** — Manage venues, equipment, availability, and allocation.
-- **Attendee Portal** — Support attendee-facing event activities.
-- **Vendor Portal** — Provide a dedicated interface for vendors.
-- **Decision Support & Analytics** — Present event data and reporting insights.
+Traditional event management often relies on spreadsheets, notebooks, WhatsApp messages, and phone calls. These disconnected methods can make coordination, tracking, and resource allocation difficult.
 
-## ⬡ Tech Stack
+EventSphere aims to bring these activities together through a centralized digital platform, supporting the event lifecycle from initial planning to post-event reporting.
+
+The platform includes role-based portals for organisers, attendees, and vendors, helping different users access the features relevant to them.
+
+## ✨ Key Features
+
+- **Event Management:** Create, view, update, and manage events.
+- **Venue Management:** Maintain venue details, capacity, location, and availability.
+- **Resource Management:** Organise and track event resources such as projectors, microphones, chairs, laptops, and other equipment.
+- **Attendee Management:** Maintain attendee information and manage registrations.
+- **Vendor Management:** Support vendor-related event coordination.
+- **Dashboard & Analytics:** View event-related information through a centralized dashboard and visual reports.
+- **Authentication & Authorization:** Secure login and role-based access for different user types.
+- **Reports:** Generate useful event and resource-related reports.
+
+## 🛠️ Tech Stack
 
 | Layer | Technologies |
 |---|---|
 | Frontend | React 19, TypeScript, Vite |
 | Styling | Tailwind CSS v4 |
 | Routing | React Router |
-| Data Fetching | TanStack Query, Axios |
-| Visualizations | Recharts, Three.js, Framer Motion, Lucide React |
-| Backend | Python 3.12+, FastAPI, Uvicorn |
+| API & Data Fetching | Axios, TanStack Query |
+| Visualisation | Recharts, Three.js |
+| Animations | Framer Motion |
+| Icons | Lucide React |
+| Backend | Python, FastAPI |
 | ORM & Validation | SQLAlchemy 2, Pydantic |
 | Authentication | JWT, python-jose, Passlib, bcrypt |
-| Reports & QR Codes | ReportLab, qrcode |
 | Database | PostgreSQL |
+| Reports & Utilities | ReportLab, qrcode |
 | Development Tools | Git, GitHub, VS Code, pgAdmin |
 
-## ⚙️ Getting Started
+## 🏗️ Project Structure
+
+```text
+EventSphere/
+│
+├── backend/
+│   ├── app/
+│   │   ├── routers/
+│   │   ├── models/
+│   │   ├── schemas/
+│   │   ├── services/
+│   │   └── main.py
+│   ├── requirements.txt
+│   └── .env
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── styles/
+│   │   ├── types/
+│   │   └── utils/
+│   └── package.json
+│
+├── assets/
+│   └── eventsphere-banner.png
+│
+├── ARCHITECTURE.md
+├── PROJECT_STATE.md
+├── LICENSE
+└── README.md
+```
+
+*The structure above highlights the main project areas; individual folders and files may evolve during development.*
+
+## 🚀 Getting Started
+
+Follow these instructions to run EventSphere locally.
 
 ### Prerequisites
 
-- Python 3.12+
+Make sure you have the following installed:
+
+- Python 3.12 or later
 - Node.js and npm
 - PostgreSQL
 - Git
 
-### 1. Clone the repository
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/EventSphere.git
+git clone https://github.com/Sahina-coder/EventSphere.git
 cd EventSphere
 ```
 
-Replace `YOUR-USERNAME` with the GitHub repository owner's username.
+### 2. Backend Setup
 
-### 2. Set up the backend
+Navigate to the backend directory:
+
+```bash
+cd backend
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+Activate it on Windows PowerShell:
 
 ```powershell
-cd backend
-python -m venv venv
 .\venv\Scripts\Activate.ps1
+```
+
+Install the dependencies:
+
+```bash
 pip install -r requirements.txt
 ```
 
-Create a `.env` file inside the `backend` directory:
+### 3. Database Configuration
+
+1. Open PostgreSQL using pgAdmin or your preferred PostgreSQL client.
+2. Create a database named `eventsphere`.
+3. Create a `.env` file inside the `backend` directory.
+
+Add the following configuration:
 
 ```env
 DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@localhost:5432/eventsphere
-JWT_SECRET_KEY=YOUR_LONG_RANDOM_SECRET
+JWT_SECRET_KEY=your-long-random-secret-key
 ```
 
-Replace the example credentials with your local PostgreSQL credentials. URL-encode special characters in the database password.
+Replace `YOUR_PASSWORD` with your PostgreSQL password.
 
-Create a PostgreSQL database named `eventsphere` using pgAdmin.
+**Note:** If your password contains special characters, URL-encode them in the database connection string.
 
-If the following dependencies are not already included in `requirements.txt`, install them:
+### 4. Run the Backend
 
-```powershell
-pip install "reportlab" "qrcode[pil]" "pydantic[email]" "python-jose[cryptography]" "passlib[bcrypt]"
-```
+From the `backend` directory, run:
 
-Start the backend server:
-
-```powershell
+```bash
 uvicorn app.main:app --reload
 ```
 
-Backend: http://127.0.0.1:8000
+The backend will be available at:
 
-API documentation: http://127.0.0.1:8000/docs
+- API: http://127.0.0.1:8000
+- API Documentation: http://127.0.0.1:8000/docs
 
-### 3. Set up the frontend
+### 5. Frontend Setup
 
-Open a **second terminal** from the project root:
+Open a **new terminal** and navigate to the frontend directory:
 
-```powershell
-cd frontend
+```bash
+cd EventSphere/frontend
+```
+
+Install dependencies:
+
+```bash
 npm install
+```
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-Frontend: http://localhost:5173
+The frontend will be available at:
 
-> **Note:** Keep both backend and frontend servers running in separate terminals during development.
+http://localhost:5173
 
-## ◇ Application Routes
+**Important:** Keep both the backend and frontend servers running in separate terminals.
+
+## 🌐 Application Routes
 
 | Route | Description | Access |
 |---|---|---|
@@ -126,19 +210,38 @@ Frontend: http://localhost:5173
 | `/login` | User login | Public |
 | `/signup` | User registration | Public |
 | `/forgot-password` | Password recovery | Public |
-| `/dashboard` | Organizer dashboard | Organizer |
+| `/dashboard` | Organiser dashboard | Organiser |
 | `/attendee` | Attendee portal | Attendee |
 | `/vendor` | Vendor portal | Vendor |
 
-## ⌘ Project Documentation
+## 📚 Project Documentation
 
-- [Architecture](./ARCHITECTURE.md) — System design and architecture.
-- [Project State](./PROJECT_STATE.md) — Current implementation status.
+For more details about the system:
+
+- [System Architecture](ARCHITECTURE.md) — Project architecture and technical design.
+- [Project State](PROJECT_STATE.md) — Current development progress and implementation status.
+
+## 🔮 Future Enhancements
+
+Potential areas for further development include:
+
+- Advanced event analytics and reporting.
+- Improved resource allocation and availability tracking.
+- QR-based attendee check-in.
+- Automated event notifications and reminders.
+- Budget tracking and management.
+- Enhanced vendor coordination.
+
+## 👩‍💻 Author
+
+**Sahina Khatun**
+
+B.Tech in Information Technology
+
+[GitHub Profile](https://github.com/Sahina-coder)
 
 ---
 
 <p align="center">
-  <strong>EventSphere</strong>
-  <br />
-  Built by Sahina
+  <strong>EventSphere — Plan Smarter. Manage Better. Make Every Event Count.</strong>
 </p>
