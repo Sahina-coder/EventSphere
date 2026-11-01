@@ -1,5 +1,11 @@
 # ✦ EventSphere
-
+<p align="center">
+  <img
+    src="./assets/eventsphere-banner.png"
+    alt="EventSphere 3D Hero Banner"
+    width="100%"
+  />
+</p>
 <p align="center">
   <strong>Intelligent Event Planning, Resource Management & Decision Support System</strong>
 </p>
