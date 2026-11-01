@@ -1,6 +1,9 @@
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
 from jose import jwt, JWTError
+from fastapi import Depends, HTTPException, Header
+from sqlalchemy.orm import Session
+from typing import Optional
 import os
 
 SECRET_KEY = os.getenv("JWT_SECRET_KEY", "eventsphere-dev-secret-change-in-production")
@@ -27,3 +30,39 @@ def decode_access_token(token: str):
         return payload
     except JWTError:
         return None
+
+
+# ───────────────────────────────────────────────
+#  NEW: FastAPI dependencies for route protection
+# ───────────────────────────────────────────────
+
+def get_current_user(authorization: Optional[str] = Header(None)):
+    """
+    Extracts and validates the JWT from the Authorization header.
+    Returns the decoded payload dict: {"sub": "user_id", "role": "Organizer", ...}
+    Use this as a dependency on any route that needs a logged-in user.
+    """
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    token = authorization.replace("Bearer ", "")
+    payload = decode_access_token(token)
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+    return payload  # {"sub": "42", "role": "Organizer", "exp": ...}
+
+
+def require_role(required_role: str):
+    """
+    Returns a dependency that checks the logged-in user has the required role.
+    Usage: current_user = Depends(require_role("Organizer"))
+    """
+    def role_checker(current_user: dict = Depends(get_current_user)):
+        if current_user.get("role") != required_role:
+            raise HTTPException(
+                status_code=403,
+                detail=f"Access denied. Required role: {required_role}"
+            )
+        return current_user
+    return role_checker
