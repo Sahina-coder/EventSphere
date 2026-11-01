@@ -4,12 +4,17 @@ from app.database import get_db
 from app.models.allocation import Allocation
 from app.models.resource import Resource
 from app.schemas.allocation import AllocationCreate, AllocationResponse
+from app.auth_utils import get_current_user, require_role
 from typing import List
 
 router = APIRouter(prefix="/allocations", tags=["Allocations"])
 
 @router.post("/", response_model=AllocationResponse)
-def create_allocation(allocation: AllocationCreate, db: Session = Depends(get_db)):
+def create_allocation(
+    allocation: AllocationCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
+):
     resource = db.query(Resource).filter(Resource.id == allocation.resource_id).first()
     if not resource:
         raise HTTPException(status_code=404, detail="Resource not found")
@@ -28,11 +33,18 @@ def create_allocation(allocation: AllocationCreate, db: Session = Depends(get_db
     return new_allocation
 
 @router.get("/", response_model=List[AllocationResponse])
-def get_allocations(db: Session = Depends(get_db)):
+def get_allocations(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
     return db.query(Allocation).all()
 
 @router.delete("/{allocation_id}")
-def delete_allocation(allocation_id: int, db: Session = Depends(get_db)):
+def delete_allocation(
+    allocation_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
+):
     allocation = db.query(Allocation).filter(Allocation.id == allocation_id).first()
     if not allocation:
         raise HTTPException(status_code=404, detail="Allocation not found")
