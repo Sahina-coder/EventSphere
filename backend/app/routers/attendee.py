@@ -3,12 +3,17 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.attendee import Attendee
 from app.schemas.attendee import AttendeeCreate, AttendeeResponse
+from app.auth_utils import get_current_user, require_role
 from typing import List
 
 router = APIRouter(prefix="/attendees", tags=["Attendees"])
 
 @router.post("/", response_model=AttendeeResponse)
-def register_attendee(attendee: AttendeeCreate, db: Session = Depends(get_db)):
+def register_attendee(
+    attendee: AttendeeCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
+):
     # Duplicate check: same email or phone already registered for this event
     existing = db.query(Attendee).filter(
         Attendee.event_id == attendee.event_id,
@@ -28,18 +33,30 @@ def register_attendee(attendee: AttendeeCreate, db: Session = Depends(get_db)):
     return new_attendee
 
 @router.get("/", response_model=List[AttendeeResponse])
-def get_attendees(db: Session = Depends(get_db)):
+def get_attendees(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
     return db.query(Attendee).all()
 
 @router.get("/{attendee_id}", response_model=AttendeeResponse)
-def get_attendee(attendee_id: int, db: Session = Depends(get_db)):
+def get_attendee(
+    attendee_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
     attendee = db.query(Attendee).filter(Attendee.id == attendee_id).first()
     if not attendee:
         raise HTTPException(status_code=404, detail="Attendee not found")
     return attendee
 
 @router.put("/{attendee_id}/status", response_model=AttendeeResponse)
-def update_attendance_status(attendee_id: int, status: str, db: Session = Depends(get_db)):
+def update_attendance_status(
+    attendee_id: int,
+    status: str,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
+):
     valid_statuses = ["Registered", "Checked In", "Absent", "Cancelled"]
     if status not in valid_statuses:
         raise HTTPException(status_code=400, detail=f"Status must be one of {valid_statuses}")
@@ -54,7 +71,11 @@ def update_attendance_status(attendee_id: int, status: str, db: Session = Depend
     return attendee
 
 @router.delete("/{attendee_id}")
-def delete_attendee(attendee_id: int, db: Session = Depends(get_db)):
+def delete_attendee(
+    attendee_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
+):
     attendee = db.query(Attendee).filter(Attendee.id == attendee_id).first()
     if not attendee:
         raise HTTPException(status_code=404, detail="Attendee not found")
