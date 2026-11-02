@@ -8,6 +8,7 @@ from app.models.allocation import Allocation
 from app.models.resource import Resource
 from app.models.vendor_assignment import VendorAssignment
 from app.models.expense import Expense
+from app.auth_utils import require_role
 from pydantic import BaseModel
 from typing import List
 
@@ -21,14 +22,18 @@ class HealthScoreResponse(BaseModel):
     issues: List[str]
 
 @router.get("/event/{event_id}", response_model=HealthScoreResponse)
-def get_health_score(event_id: int, db: Session = Depends(get_db)):
+def get_health_score(
+    event_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
+):
     event = db.query(Event).filter(Event.id == event_id).first()
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
 
     issues = []
 
-    # Registration readiness (20%) - has at least some registrations
+    # Registration readiness (20%)
     attendee_count = db.query(Attendee).filter(Attendee.event_id == event_id).count()
     registration_score = min(attendee_count / 10, 1) * 20 if attendee_count > 0 else 0
     if attendee_count == 0:
@@ -36,13 +41,13 @@ def get_health_score(event_id: int, db: Session = Depends(get_db)):
     elif attendee_count < 5:
         issues.append("Registration is below target")
 
-    # Venue readiness (15%) - has a booking
+    # Venue readiness (15%)
     booking = db.query(Booking).filter(Booking.event_id == event_id).first()
     venue_score = 15 if booking else 0
     if not booking:
         issues.append("No venue booked for this event")
 
-    # Resource readiness (15%) - has allocations, none unavailable
+    # Resource readiness (15%)
     allocations = db.query(Allocation).filter(Allocation.event_id == event_id).all()
     resource_score = 15 if allocations else 0
     unavailable_resources = 0
@@ -81,10 +86,10 @@ def get_health_score(event_id: int, db: Session = Depends(get_db)):
     else:
         budget_score = 5
 
-    # Schedule readiness (10%) - event has a date set (always true, but check if in past without completion)
+    # Schedule readiness (10%)
     schedule_score = 10
 
-    # Attendance/engagement (15%) - only meaningful post-event, otherwise neutral partial credit
+    # Attendance/engagement (15%)
     checked_in = db.query(Attendee).filter(
         Attendee.event_id == event_id, Attendee.attendance_status == "Checked In"
     ).count()
@@ -93,7 +98,7 @@ def get_health_score(event_id: int, db: Session = Depends(get_db)):
         if checked_in / attendee_count < 0.5:
             issues.append("Low attendance turnout")
     else:
-        attendance_score = 7.5  # neutral, not yet applicable
+        attendance_score = 7.5
 
     total_score = round(
         registration_score + venue_score + resource_score + vendor_score + budget_score + schedule_score + attendance_score
