@@ -4,6 +4,7 @@ from app.database import get_db
 from app.models.feedback import Feedback
 from app.models.attendee import Attendee
 from app.schemas.feedback import FeedbackCreate, FeedbackResponse, FeedbackSummary
+from app.auth_utils import get_current_user
 from typing import List
 
 router = APIRouter(prefix="/feedback", tags=["Feedback"])
@@ -13,7 +14,11 @@ def avg(values):
     return round(sum(vals) / len(vals), 1) if vals else 0.0
 
 @router.post("/", response_model=FeedbackResponse)
-def submit_feedback(feedback: FeedbackCreate, db: Session = Depends(get_db)):
+def submit_feedback(
+    feedback: FeedbackCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),  # any logged-in user (attendees give feedback)
+):
     attendee = db.query(Attendee).filter(Attendee.id == feedback.attendee_id).first()
     if not attendee:
         raise HTTPException(status_code=404, detail="Attendee not found")
@@ -35,11 +40,18 @@ def submit_feedback(feedback: FeedbackCreate, db: Session = Depends(get_db)):
     return new_feedback
 
 @router.get("/", response_model=List[FeedbackResponse])
-def get_all_feedback(db: Session = Depends(get_db)):
+def get_all_feedback(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
     return db.query(Feedback).all()
 
 @router.get("/event/{event_id}/summary", response_model=FeedbackSummary)
-def get_feedback_summary(event_id: int, db: Session = Depends(get_db)):
+def get_feedback_summary(
+    event_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
     items = db.query(Feedback).filter(Feedback.event_id == event_id).all()
     return FeedbackSummary(
         event_id=event_id,
