@@ -6,6 +6,7 @@ from app.models.attendee import Attendee
 from app.models.resource import Resource
 from app.models.allocation import Allocation
 from app.models.expense import Expense
+from app.auth_utils import require_role
 from pydantic import BaseModel
 from typing import List
 
@@ -33,7 +34,10 @@ class BudgetForecast(BaseModel):
     note: str
 
 @router.get("/attendance", response_model=AttendanceForecast)
-def forecast_attendance(db: Session = Depends(get_db)):
+def forecast_attendance(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
+):
     events = db.query(Event).all()
     counts = []
     for e in events:
@@ -58,7 +62,10 @@ def forecast_attendance(db: Session = Depends(get_db)):
     )
 
 @router.get("/resources", response_model=ResourceForecast)
-def forecast_resources(db: Session = Depends(get_db)):
+def forecast_resources(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
+):
     events = db.query(Event).all()
     resources = db.query(Resource).all()
 
@@ -81,7 +88,10 @@ def forecast_resources(db: Session = Depends(get_db)):
     return ResourceForecast(based_on_events=len(events), items=items)
 
 @router.get("/budget", response_model=BudgetForecast)
-def forecast_budget(db: Session = Depends(get_db)):
+def forecast_budget(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
+):
     events = db.query(Event).all()
     totals = []
     for e in events:
