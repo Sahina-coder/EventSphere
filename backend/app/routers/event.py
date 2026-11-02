@@ -3,12 +3,17 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.event import Event
 from app.schemas.event import EventCreate, EventResponse
+from app.auth_utils import get_current_user, require_role
 from typing import List
 
 router = APIRouter(prefix="/events", tags=["Events"])
 
 @router.post("/", response_model=EventResponse)
-def create_event(event: EventCreate, db: Session = Depends(get_db)):
+def create_event(
+    event: EventCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),  # PROTECTED
+):
     new_event = Event(**event.dict())
     db.add(new_event)
     db.commit()
@@ -16,18 +21,30 @@ def create_event(event: EventCreate, db: Session = Depends(get_db)):
     return new_event
 
 @router.get("/", response_model=List[EventResponse])
-def get_events(db: Session = Depends(get_db)):
+def get_events(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),  # any logged-in user can view
+):
     return db.query(Event).all()
 
 @router.get("/{event_id}", response_model=EventResponse)
-def get_event(event_id: int, db: Session = Depends(get_db)):
+def get_event(
+    event_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),  # any logged-in user can view
+):
     event = db.query(Event).filter(Event.id == event_id).first()
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
     return event
 
 @router.put("/{event_id}", response_model=EventResponse)
-def update_event(event_id: int, updated: EventCreate, db: Session = Depends(get_db)):
+def update_event(
+    event_id: int,
+    updated: EventCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),  # PROTECTED
+):
     event = db.query(Event).filter(Event.id == event_id).first()
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
@@ -38,7 +55,11 @@ def update_event(event_id: int, updated: EventCreate, db: Session = Depends(get_
     return event
 
 @router.delete("/{event_id}")
-def delete_event(event_id: int, db: Session = Depends(get_db)):
+def delete_event(
+    event_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),  # PROTECTED
+):
     event = db.query(Event).filter(Event.id == event_id).first()
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
