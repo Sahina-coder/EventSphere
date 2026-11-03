@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.attendee import Attendee
@@ -14,7 +14,6 @@ def register_attendee(
     db: Session = Depends(get_db),
     current_user: dict = Depends(require_role("Organizer")),
 ):
-    # Duplicate check: same email or phone already registered for this event
     existing = db.query(Attendee).filter(
         Attendee.event_id == attendee.event_id,
         (Attendee.email == attendee.email) | (Attendee.phone == attendee.phone)
@@ -34,10 +33,12 @@ def register_attendee(
 
 @router.get("/", response_model=List[AttendeeResponse])
 def get_attendees(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    return db.query(Attendee).all()
+    return db.query(Attendee).offset(skip).limit(limit).all()
 
 @router.get("/{attendee_id}", response_model=AttendeeResponse)
 def get_attendee(
