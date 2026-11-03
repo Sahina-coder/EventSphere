@@ -8,6 +8,7 @@ from app.models.venue import Venue
 from app.models.allocation import Allocation
 from app.models.resource import Resource
 from app.models.expense import Expense
+from app.auth_utils import require_role
 from pydantic import BaseModel
 from typing import List, Optional
 
@@ -36,6 +37,7 @@ def simulate_participants(
     event_id: int,
     simulated_participants: int = Query(...),
     db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
 ):
     event = db.query(Event).filter(Event.id == event_id).first()
     if not event:
@@ -50,7 +52,6 @@ def simulate_participants(
 
     additional_participants = max(0, simulated_participants - current_participants)
     additional_chairs = additional_participants
-    # Rough cost estimate: ₹50 per additional chair/setup, ₹150 per additional catering unit
     estimated_cost = additional_participants * 50 + additional_participants * 150
 
     if capacity_sufficient is False:
@@ -75,6 +76,7 @@ def simulate_budget(
     event_id: int,
     budget_change: float = Query(..., description="Positive to increase, negative to decrease"),
     db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
 ):
     event = db.query(Event).filter(Event.id == event_id).first()
     if not event:
