@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.venue import Venue
 from app.models.booking import Booking
+from app.auth_utils import require_role
 from pydantic import BaseModel
 from typing import List, Optional
 
@@ -21,6 +22,7 @@ class VenueRecommendation(BaseModel):
 def recommend_venues(
     expected_participants: int = Query(..., description="Expected number of participants"),
     db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
 ):
     venues = db.query(Venue).all()
     booked_venue_ids = {b.venue_id for b in db.query(Booking).all()}
@@ -30,7 +32,6 @@ def recommend_venues(
         score = 0
         reasons = []
 
-        # Capacity suitability (up to 50 points)
         if v.capacity >= expected_participants:
             excess_ratio = v.capacity / expected_participants if expected_participants > 0 else 1
             if excess_ratio <= 1.3:
@@ -45,7 +46,6 @@ def recommend_venues(
         else:
             reasons.append(f"Capacity ({v.capacity}) is below expected participants ({expected_participants})")
 
-        # Availability (up to 30 points)
         currently_booked = v.id in booked_venue_ids
         if v.is_available == "Available" and not currently_booked:
             score += 30
@@ -56,7 +56,6 @@ def recommend_venues(
         else:
             reasons.append("Marked unavailable")
 
-        # Base viability (up to 20 points) - always gets some credit for existing
         score += 20
 
         results.append(VenueRecommendation(
