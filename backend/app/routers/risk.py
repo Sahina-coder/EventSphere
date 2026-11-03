@@ -10,6 +10,7 @@ from app.models.resource import Resource
 from app.models.vendor_assignment import VendorAssignment
 from app.models.vendor import Vendor
 from app.models.expense import Expense
+from app.auth_utils import require_role
 from pydantic import BaseModel
 from typing import List, Optional
 
@@ -26,7 +27,11 @@ class RiskResponse(BaseModel):
     risks: List[Risk]
 
 @router.get("/event/{event_id}", response_model=RiskResponse)
-def get_event_risks(event_id: int, db: Session = Depends(get_db)):
+def get_event_risks(
+    event_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
+):
     event = db.query(Event).filter(Event.id == event_id).first()
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
@@ -140,7 +145,7 @@ def get_event_risks(event_id: int, db: Session = Depends(get_db)):
             suggested_action="Investigate reasons for cancellations",
         ))
 
-    # Attendance risks (only meaningful for completed events)
+    # Attendance risks
     if event.status == "Completed" and attendee_count > 0:
         checked_in = db.query(Attendee).filter(
             Attendee.event_id == event_id, Attendee.attendance_status == "Checked In"
