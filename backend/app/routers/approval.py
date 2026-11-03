@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.approval import ApprovalRequest
@@ -23,10 +23,12 @@ def create_request(
 
 @router.get("/", response_model=List[ApprovalResponse])
 def get_requests(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    return db.query(ApprovalRequest).order_by(ApprovalRequest.created_at.desc()).all()
+    return db.query(ApprovalRequest).order_by(ApprovalRequest.created_at.desc()).offset(skip).limit(limit).all()
 
 @router.put("/{request_id}/decision", response_model=ApprovalResponse)
 def make_decision(
