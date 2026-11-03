@@ -9,6 +9,7 @@ from app.models.vendor_assignment import VendorAssignment
 from app.models.vendor import Vendor
 from app.models.booking import Booking
 from app.models.venue import Venue
+from app.auth_utils import require_role
 import csv
 import io
 from reportlab.lib.pagesizes import A4
@@ -52,7 +53,11 @@ def gather_event_data(event_id: int, db: Session):
     }
 
 @router.get("/event/{event_id}/csv")
-def export_event_csv(event_id: int, db: Session = Depends(get_db)):
+def export_event_csv(
+    event_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
+):
     data = gather_event_data(event_id, db)
     event = data["event"]
 
@@ -100,7 +105,11 @@ def export_event_csv(event_id: int, db: Session = Depends(get_db)):
     )
 
 @router.get("/event/{event_id}/pdf")
-def export_event_pdf(event_id: int, db: Session = Depends(get_db)):
+def export_event_pdf(
+    event_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
+):
     data = gather_event_data(event_id, db)
     event = data["event"]
 
