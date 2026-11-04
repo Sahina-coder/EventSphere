@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.feedback import Feedback
@@ -17,7 +17,7 @@ def avg(values):
 def submit_feedback(
     feedback: FeedbackCreate,
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user),  # any logged-in user (attendees give feedback)
+    current_user: dict = Depends(get_current_user),
 ):
     attendee = db.query(Attendee).filter(Attendee.id == feedback.attendee_id).first()
     if not attendee:
@@ -41,10 +41,12 @@ def submit_feedback(
 
 @router.get("/", response_model=List[FeedbackResponse])
 def get_all_feedback(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    return db.query(Feedback).all()
+    return db.query(Feedback).offset(skip).limit(limit).all()
 
 @router.get("/event/{event_id}/summary", response_model=FeedbackSummary)
 def get_feedback_summary(
