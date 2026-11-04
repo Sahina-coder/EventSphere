@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.expense import Expense
@@ -27,10 +27,12 @@ def create_expense(
 
 @router.get("/", response_model=List[ExpenseResponse])
 def get_expenses(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    return db.query(Expense).all()
+    return db.query(Expense).offset(skip).limit(limit).all()
 
 @router.put("/{expense_id}", response_model=ExpenseResponse)
 def update_expense(
