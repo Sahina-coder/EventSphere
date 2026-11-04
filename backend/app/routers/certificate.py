@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.certificate import Certificate
@@ -8,6 +8,7 @@ from app.schemas.certificate import CertificateResponse, CertificateVerifyRespon
 from app.auth_utils import get_current_user, require_role
 from typing import List
 import datetime
+import uuid
 
 router = APIRouter(prefix="/certificates", tags=["Certificates"])
 
@@ -32,8 +33,8 @@ def generate_certificate(
         raise HTTPException(status_code=409, detail="Certificate already generated for this attendee")
 
     year = datetime.datetime.utcnow().year
-    count = db.query(Certificate).count() + 1
-    cert_code = f"CERT-{year}-{count:05d}"
+    unique_id = uuid.uuid4().hex[:8].upper()
+    cert_code = f"CERT-{year}-{unique_id}"
 
     new_cert = Certificate(
         certificate_code=cert_code,
@@ -47,10 +48,12 @@ def generate_certificate(
 
 @router.get("/", response_model=List[CertificateResponse])
 def get_certificates(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    return db.query(Certificate).all()
+    return db.query(Certificate).offset(skip).limit(limit).all()
 
 @router.get("/verify/{certificate_code}", response_model=CertificateVerifyResponse)
 def verify_certificate(
