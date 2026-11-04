@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 from app.database import get_db
@@ -13,7 +13,7 @@ router = APIRouter(prefix="/bookings", tags=["Bookings"])
 def create_booking(
     booking: BookingCreate,
     db: Session = Depends(get_db),
-    current_user: dict = Depends(require_role("Organizer")),  # PROTECTED
+    current_user: dict = Depends(require_role("Organizer")),
 ):
     conflict = db.query(Booking).filter(
         Booking.venue_id == booking.venue_id,
@@ -37,16 +37,18 @@ def create_booking(
 
 @router.get("/", response_model=List[BookingResponse])
 def get_bookings(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user),  # any logged-in user
+    current_user: dict = Depends(get_current_user),
 ):
-    return db.query(Booking).all()
+    return db.query(Booking).offset(skip).limit(limit).all()
 
 @router.delete("/{booking_id}")
 def delete_booking(
     booking_id: int,
     db: Session = Depends(get_db),
-    current_user: dict = Depends(require_role("Organizer")),  # PROTECTED
+    current_user: dict = Depends(require_role("Organizer")),
 ):
     booking = db.query(Booking).filter(Booking.id == booking_id).first()
     if not booking:
