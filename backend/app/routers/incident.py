@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.incident import Incident
@@ -14,7 +14,7 @@ VALID_STATUSES = ["OPEN", "ASSIGNED", "IN_PROGRESS", "RESOLVED", "CLOSED"]
 def report_incident(
     incident: IncidentCreate,
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user),  # anyone can report
+    current_user: dict = Depends(get_current_user),
 ):
     new_incident = Incident(**incident.dict(), status="OPEN")
     db.add(new_incident)
@@ -24,10 +24,12 @@ def report_incident(
 
 @router.get("/", response_model=List[IncidentResponse])
 def get_incidents(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    return db.query(Incident).order_by(Incident.reported_at.desc()).all()
+    return db.query(Incident).order_by(Incident.reported_at.desc()).offset(skip).limit(limit).all()
 
 @router.put("/{incident_id}/status", response_model=IncidentResponse)
 def update_status(
