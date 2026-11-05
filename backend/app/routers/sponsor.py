@@ -1,16 +1,21 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.sponsor import Sponsor
 from app.models.event import Event
 from app.models.expense import Expense
 from app.schemas.sponsor import SponsorCreate, SponsorResponse, FinancialSummary
+from app.auth_utils import get_current_user, require_role
 from typing import List
 
 router = APIRouter(prefix="/sponsors", tags=["Sponsorship"])
 
 @router.post("/", response_model=SponsorResponse)
-def add_sponsor(sponsor: SponsorCreate, db: Session = Depends(get_db)):
+def add_sponsor(
+    sponsor: SponsorCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
+):
     event = db.query(Event).filter(Event.id == sponsor.event_id).first()
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
@@ -21,11 +26,20 @@ def add_sponsor(sponsor: SponsorCreate, db: Session = Depends(get_db)):
     return new_sponsor
 
 @router.get("/", response_model=List[SponsorResponse])
-def get_sponsors(db: Session = Depends(get_db)):
-    return db.query(Sponsor).all()
+def get_sponsors(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=200),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    return db.query(Sponsor).offset(skip).limit(limit).all()
 
 @router.delete("/{sponsor_id}")
-def delete_sponsor(sponsor_id: int, db: Session = Depends(get_db)):
+def delete_sponsor(
+    sponsor_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
+):
     sponsor = db.query(Sponsor).filter(Sponsor.id == sponsor_id).first()
     if not sponsor:
         raise HTTPException(status_code=404, detail="Sponsor not found")
@@ -34,7 +48,11 @@ def delete_sponsor(sponsor_id: int, db: Session = Depends(get_db)):
     return {"message": "Sponsor removed"}
 
 @router.get("/event/{event_id}/financial-summary", response_model=FinancialSummary)
-def get_financial_summary(event_id: int, db: Session = Depends(get_db)):
+def get_financial_summary(
+    event_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
     event = db.query(Event).filter(Event.id == event_id).first()
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
