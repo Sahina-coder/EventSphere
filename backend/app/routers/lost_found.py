@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.lost_found import LostFoundItem
@@ -14,7 +14,7 @@ VALID_STATUSES = ["Reported", "Found", "Claimed", "Verified", "Returned", "Close
 def report_item(
     item: LostFoundCreate,
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user),  # anyone can report
+    current_user: dict = Depends(get_current_user),
 ):
     new_item = LostFoundItem(**item.dict(), status="Reported")
     db.add(new_item)
@@ -24,10 +24,12 @@ def report_item(
 
 @router.get("/", response_model=List[LostFoundResponse])
 def get_items(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    return db.query(LostFoundItem).order_by(LostFoundItem.reported_at.desc()).all()
+    return db.query(LostFoundItem).order_by(LostFoundItem.reported_at.desc()).offset(skip).limit(limit).all()
 
 @router.put("/{item_id}/status", response_model=LostFoundResponse)
 def update_status(
