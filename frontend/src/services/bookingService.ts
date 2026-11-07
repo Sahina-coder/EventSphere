@@ -11,6 +11,11 @@ export const createBooking = async (data: BookingCreate): Promise<Booking> => {
   return res.data;
 };
 
+export const updateBooking = async (id: number, data: BookingCreate): Promise<Booking> => {
+  const res = await api.put(`/bookings/${id}`, data);
+  return res.data;
+};
+
 export const deleteBooking = async (id: number): Promise<void> => {
   await api.delete(`/bookings/${id}`);
 };
