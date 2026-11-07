@@ -44,6 +44,40 @@ def get_bookings(
 ):
     return db.query(Booking).offset(skip).limit(limit).all()
 
+@router.put("/{booking_id}", response_model=BookingResponse)
+def update_booking(
+    booking_id: int,
+    updated: BookingCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(require_role("Organizer")),
+):
+    booking = db.query(Booking).filter(Booking.id == booking_id).first()
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+
+    # Conflict check: ensure another booking doesn't overlap (exclude current booking ID)
+    conflict = db.query(Booking).filter(
+        Booking.venue_id == updated.venue_id,
+        Booking.id != booking_id,
+        and_(
+            Booking.start_time < updated.end_time,
+            Booking.end_time > updated.start_time,
+        )
+    ).first()
+
+    if conflict:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Venue already booked from {conflict.start_time} to {conflict.end_time}"
+        )
+
+    for key, value in updated.dict().items():
+        setattr(booking, key, value)
+
+    db.commit()
+    db.refresh(booking)
+    return booking
+
 @router.delete("/{booking_id}")
 def delete_booking(
     booking_id: int,
